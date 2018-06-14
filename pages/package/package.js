@@ -15,7 +15,7 @@ Page({
   //https://user-images.githubusercontent.com/2777305/40645613-759aaef4-6359-11e8-8b20-eff82b0355b1.png
     var that = this
     that.setData({
-      list: [{ "time": 2018, "title": "damon", "address":"hang"},
+      packageList: [{ "time": 2018, "title": "damon", "address":"hang"},
         { "time": 2019, "title": "damon", "address": "hangzhou" },
         { "time": 2020, "title": "damon11", "address": "hang" },
         { "time": 2021, "title": "da", "address": "hangzhou" },
@@ -85,7 +85,7 @@ Page({
   data: {
     messageMe: 'Hello MINA!',
     array: [1, 2, 3, 4, 5],
-    list:[]  
+    packageList:[]  
   },
   addNewList: function (e) {
     console.log("addNewList" + e.target.id);

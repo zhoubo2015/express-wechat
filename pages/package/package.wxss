@@ -3,6 +3,7 @@
 page{
   height: 100%;
   width: 100%;
+  background:rgba(45, 118, 232, 1.0);
   /* background-color: red; */
   /* background:-webkit-gradient(linear, 0% 0%, 0% 100%,from(rgba(0,0,0,0)), to(rgba(12, 205, 137, 0.7))); */
 }
@@ -10,7 +11,7 @@ page{
   height: 100%;
   width: 100%;
   /* background: url('...url...');   */
-  background:-webkit-gradient(linear, 0% 0%, 0% 100%,from(rgba(45, 118, 232, 1.0)), to(rgba(0, 0, 0, 0)));   
+  /* background:-webkit-gradient(linear, 0% 0%, 0% 100%,from(rgba(45, 118, 232, 1.0)), to(rgba(45, 118, 232, 0.5)));     */
   /* background-color: red; */
   /* background-size: cover;   */
 }
@@ -18,20 +19,26 @@ page{
    display: flex;  
    justify-content: center;  
   /* align-items: center; */
-  padding-top: 50px;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  color: white;
+  font-size: 20px;
 }
-.package-list{
-  border: 20px; 
+.package-list-end{
+  border-left: 20px; 
+  border-right: 20px; 
   /* border-left: 20px; */
   /* width: 90%; */
-  /* margin-left: 5%;
-  margin-right: 5%; */
+  margin-left: 5%;
+  margin-right: 5%;
   border-radius: 4px;
-  background-color: lightcoral; 
+  background-color: white; 
+  margin-bottom: 2%;
+  margin-top: 2%;
 }
 .package-list-end::after{
-  content: "";
-  height: 10px;
+  /* content: ""; */
+  height: 10px;/*useless*/
   width: 100%;
   /* position:absolute; */
   display:inline-block;
@@ -39,8 +46,10 @@ page{
   /* bottom: 10px; */
 }
 .table {
-  border: 2px solid darkgray;
-  border-radius: 4px;
+  border: 1px solid lightgray;
+  border-radius: 2px;
+  margin-left: 2px;
+  margin-right: 2px;
 }
 .tr {
   display: flex;
@@ -53,6 +62,18 @@ page{
     width:25%;
     justify-content: center;
     text-align: center;
+}
+.td-first{
+  color: orange;
+}
+.td-second{
+  color: red;
+}
+.td-three{
+  color: green;
+}
+.td-four{
+  color: black;
 }
 .bg-w{
   background: snow;
@@ -69,6 +90,22 @@ page{
   height: 3rem;
   align-items: center;
 }
+.label-custom{
+  margin-left: 12px;
+  color: lightgray;
+}
+.weui-cells:before {
+    border-top: 0px;
+}
+.weui-cells:after {
+    border-bottom: 0px;
+}
+/* .weui-cells{
+  border: 1px solid lightgray;
+  border-radius: 2px;
+  margin-left: 2px;
+  margin-right: 2px;
+} */
 .package-info{
   display: flex;
   flex-flow: row; 
@@ -80,5 +117,5 @@ page{
   flex-flow: row; 
   justify-content: space-between;
   align-items: center;
-  /* height: 40px; */
+  height: 54px; 
 }

@@ -21,19 +21,19 @@
         "pagePath": "pages/package/package",
         "text": "首页",
         "iconPath": "images/package/package.png",
-        "selectedIconPath": "images/package/package.png"
+        "selectedIconPath": "images/package/package_selected.png"
       },
       {
         "pagePath": "pages/new/new",
         "text": "创建包裹",
         "iconPath": "images/new/new.png",
-        "selectedIconPath": "images/new/new.png"
+        "selectedIconPath": "images/new/new_selected.png"
       },
       {
         "pagePath": "pages/setting/setting",
         "text": "我",
         "iconPath": "images/setting/set.png",
-        "selectedIconPath": "images/setting/set.png"
+        "selectedIconPath": "images/setting/set_selected.png"
       }
     ]
   },

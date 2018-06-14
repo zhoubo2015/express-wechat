@@ -1,90 +1,55 @@
-<!--pages/package/package.wxml-->
-<!-- <text>pages/package/package.wxml</text>
-<view bindtap="viewTapMe"> click me </view>
-<view> {{messageMe}} </view>
-<view wx:for="{{array}}"> {{item}} </view> -->
-<!-- mode="aspectFit" -->
-<!-- <image class="image" id="{{index}}" mode="aspectFit" src="https://user-images.githubusercontent.com/2777305/40645613-759aaef4-6359-11e8-8b20-eff82b0355b1.png"></image>  -->
-<!-- <view style='background-color:black;height:100%;'> -->
-  <view class="whole-page">
-     <view>
-      <text class='text-center'>ABC英文</text>
-    </view> 
-     <view class='package-list-end' wx:for="{{list}}">  
-      <view class='package-list'>
-        <view class='package-info'>
-        <text style='font-size:17px;padding-left:5px'>A11库</text>
+<view class="whole-page">
+  <view>
+    <text class='text-center'>配货中心客户端</text>
+  </view> 
+  <view class='package-list-end' wx:for="{{packageList}}">  
+    <view class='package-list'>
+      <view class='package-info'>
+        <text style='font-size:17px;padding-left:5px;color:red;'>A11库</text>
         <text style='font-size:15px;'>A100012018050511</text>
-        <text style='font-size:11px;padding-right:5px'>2018-05-05 12:50</text>
+        <text style='font-size:11px;padding-right:5px;color:lightgray;'>2018-05-05 12:50</text>
       </view>
-      <view class="table">
-        <view class="tr bg-g">
-          <view class="td">1</view>
-          <view class="td">2</view>
-          <view class="td">3</view>
-          <view class="td">4</view>
-        </view>
-        <view class="tr bg-g">
-          <view class="td">{{item.time}}</view>
-          <view class="td">{{item.title}}</view>
-          <view class="td">{{item.address}}</view>
-          <view class="td">{{item.address}}</view>
-        </view>
-        <view>
-          <label>1233</label>
-        </view>
-        <view>
-          <label>567</label>
-        </view>
-      </view> 
-      <view class="weui-cells weui-cells_after-title">
-          <navigator url="/pages/package/package/packageDetail" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
-              <view class="weui-cell__bd">cell standard</view>
-              <view class="weui-cell__ft weui-cell__ft_in-access">说明文字</view>
-          </navigator>
-          <view class="weui-cell weui-cell_access">
-              <view class="weui-cell__bd">单行列表</view>
-              <view class="weui-cell__ft weui-cell__ft_in-access" style="font-size: 0">
-                  <view style="display: inline-block;vertical-align:middle; font-size: 17px;">详细信息</view>
-                  <view class="weui-badge weui-badge_dot" style="margin-left: 5px;margin-right: 5px;"></view>
-              </view>
-          </view>
-          <navigator url="/pages/package/order/orderDetail" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
-              <view class="weui-cell__bd">cell standard</view>
-              <view class="weui-cell__ft weui-cell__ft_in-access">说明文字</view>
-          </navigator>
-      </view> 
-      <view class='package-button'>
-        <button id='addNew{{index}}' class="weui-btn" type="primary" plain="true" bindtap="addNewList">按钮</button>
-        <button id='closePack{{index}}' class="weui-btn" type="primary" plain="true" bindtap="closePackage">按钮按钮</button>
+    </view>
+    <view class="table">
+      <view class="tr bg-g">
+        <view class="td td-first">1</view>
+        <view class="td td-second">2</view>
+        <view class="td td-three">3</view>
+        <view class="td td-four">4</view>
       </view>
-      <!-- <view>
-        <label class="time">{{item.time}}</label>  
-        <label class="title">{{item.title}}</label>  
-        <label class="address">{{item.address}}</label>  
-      </view>   -->
+      <view class="tr bg-g">
+        <view class="td">未入库</view>
+        <view class="td">已改期</view>
+        <view class="td">已入库</view>
+        <view class="td">总订单</view>
+      </view>
+      <view>
+        <label class='label-custom'>截止日期:</label>
+      </view>
+      <view>
+        <label class='label-custom'>包裹状态:</label>
       </view>
     </view> 
-
-    <view class="table">
-      <view class="tr bg-w">
-        <view class="th">head1</view>
-        <view class="th">head2</view>
-        <view class="th ">head3</view>
-      </view>
-      <block wx:for="{{list}}">
-        <view class="tr bg-g" wx:if="{{index % 2 == 0}}">
-          <view class="td">{{item.time}}</view>
-          <view class="td">{{item.title}}</view>
-          <view class="td">{{item.address}}</view>
-        </view>
-        <view class="tr" wx:else>
-          <view class="td">{{item.time}}</view>
-          <view class="td">{{item.title}}</view>
-          <view class="td">{{item.address}}</view>
-        </view>
-      </block>
+    <view class="weui-cells weui-cells_after-title">
+        <navigator url="/pages/package/package/packageDetail" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
+            <view class="weui-cell__bd">包裹订单</view>
+            <view class="weui-cell__ft weui-cell__ft_in-access">说明文字</view>
+        </navigator>
+        <navigator url="/pages/package/order/orderDetail" class="weui-cell weui-cell_access">
+            <view class="weui-cell__bd">订单动态</view>
+            <view class="weui-cell__ft weui-cell__ft_in-access" style="font-size: 0">
+                <view style="display: inline-block;vertical-align:middle; font-size: 17px;">条动态</view>
+                <view class="weui-badge weui-badge_dot" style="margin-left: 5px;margin-right: 5px;"></view>
+            </view>
+        </navigator>
+        <!-- <navigator url="/pages/package/order/orderDetail" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
+            <view class="weui-cell__bd">收货信息推送</view>
+            <view class="weui-cell__ft weui-cell__ft_in-access">说明文字</view>
+        </navigator> -->
+    </view> 
+    <view class='package-button'>
+      <button id='addNew{{index}}'  bindtap="addNewList">添加订单</button>
+      <button id='closePack{{index}}' bindtap="closePackage">封包</button>
     </view>
-
   </view>
-<!-- </view> -->
+</view> 
