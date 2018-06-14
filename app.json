@@ -1,0 +1,45 @@
+{
+  "pages": [
+    "pages/package/package",
+    "pages/package/package/packageDetail",
+    "pages/package/order/orderDetail",
+    "pages/new/new",
+    "pages/new/order/newOrder",
+    "pages/new/addCompany/newCompany",
+    "pages/setting/setting"
+  ],
+  "window": {
+    "backgroundTextStyle": "red",
+    "navigationBarBackgroundColor": "#2D76EC",
+    "navigationBarTitleText": "Express",
+    "navigationBarTextStyle": "#fff"
+  },
+  "tabBar": {
+    "selectedColor": "#1296db",
+    "list": [
+      {
+        "pagePath": "pages/package/package",
+        "text": "首页",
+        "iconPath": "images/package/package.png",
+        "selectedIconPath": "images/package/package.png"
+      },
+      {
+        "pagePath": "pages/new/new",
+        "text": "创建包裹",
+        "iconPath": "images/new/new.png",
+        "selectedIconPath": "images/new/new.png"
+      },
+      {
+        "pagePath": "pages/setting/setting",
+        "text": "我",
+        "iconPath": "images/setting/set.png",
+        "selectedIconPath": "images/setting/set.png"
+      }
+    ]
+  },
+  "networkTimeout": {
+    "request": 10000,
+    "downloadFile": 10000
+  },
+  "debug": true
+}

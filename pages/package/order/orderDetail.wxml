@@ -1,0 +1,89 @@
+<!--pages/package/order/orderDetail.wxml-->
+<view class='whole-page'>
+  <scroll-view scroll-y style='height:{{scrollHeight}}px;'>
+    <view class='order-detail-view'>
+      <view>
+        <text class='text-custom'>Company:{{companyName}}</text>
+        <text class='text-custom'>Contact:{{contactName}}</text>
+        <view class='phone-number'>
+          <text class='text-custom'>Number:{{phoneNumber}}</text>
+          <button class='phone-number-button'>按钮</button>
+        </view>
+        <text class='textview-custom'>Address:{{companyAddress}}</text>
+      </view>
+      <view class='virtual-line'></view>
+      <view>
+          <view class="weui-cell">
+              <view class="weui-cell__bd">order Status</view>
+              <view class="weui-cell__ft weui-cell__ft-color">no complete</view>
+          </view>
+          <view class="weui-cell">
+              <view class="weui-cell__bd weui-cell__bd-color">order number</view>
+              <view class="weui-cell__ft">201806120001</view>
+          </view>
+          <view class="weui-cell">
+              <view class="weui-cell__bd weui-cell__bd-color">order Time</view>
+              <view class="weui-cell__ft">2018-12-12 19:15</view>
+          </view>
+      </view>
+      <view class='virtual-line'></view>
+      <view>
+          <view class="weui-cell">
+              <view class="weui-cell__bd weui-cell__bd-color">order Count</view>
+              <view class="weui-cell__ft">{{orderCount}}</view>
+          </view>
+          <view class="weui-cell">
+              <view class="weui-cell__bd weui-cell__bd-color">order Weight</view>
+              <view class="weui-cell__ft">{{orderWeight}}</view>
+          </view>
+          <view class="weui-cell">
+              <view class="weui-cell__bd weui-cell__bd-color">order Money</view>
+              <view class="weui-cell__ft">${{orderMoney}}</view>
+          </view>
+      </view>
+      <view class='virtual-line'></view>
+      <view>
+          <view class="weui-cell">
+              <view class="weui-cell__bd">Deadline</view>
+              <view class="weui-cell__ft weui-cell__ft-color-red">{{orderDeadline}}</view>
+          </view>
+      </view>
+    </view>
+    <view class='order-detail-view'>
+      <navigator url="" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
+        <view class="weui-cell__bd">附件</view>
+        <view class="weui-cell__ft weui-cell__ft_in-access">{{orderPicCount}}个附件</view>
+      </navigator>
+    </view>
+    <view class='order-detail-view'>
+      <view class="container">
+        <view class="status-box">
+            <view bindtap="statusTap" class="status-label {{index == currentType ? 'active' : ''}}" wx:for-items="{{statusType}}" wx:key="{{index}}" data-index="{{index}}">
+                {{item}}
+                <view class="{{tabClass[index]}}"></view>
+            </view>
+        </view>
+        <view class="no-order" hidden="{{orderList ? true : false}}">
+            <image src="/images/no-order.png" class="no-order-img"></image>
+            <view class="text">没有经销商</view>
+        </view>
+        <scroll-view scroll-y style='height:200px;'>
+          <view class="order-list" hidden="{{orderList ? false : true}}">
+              <view class="a-order" wx:for-items="{{orderList}}" wx:key="{{index}}">
+                  <view class="order-date">
+                      <view class="date-box">下单时间：{{item.dateAdd}}</view>
+                      <view class="status {{(item.status==-1 || item.status==4) ? '':'red'}}">{{item.statusStr}}</view>
+                  </view>
+              </view>
+          </view>
+        </scroll-view>
+      </view>
+    </view>
+  </scroll-view>
+
+  <view class='tab-bottom'>
+    <button id='' class="weui-btn" type="primary" plain="true" bindtap="addNewList">按钮</button>
+    <button id='' class="weui-btn" type="primary" plain="true" bindtap="closePackage">按钮按钮</button>
+    <button id='' class="weui-btn" type="primary" plain="true" bindtap="closePackage">按钮按钮1</button>
+  </view>
+</view>
