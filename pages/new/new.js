@@ -1,4 +1,5 @@
 // pages/new/new.js
+var app = getApp()
 Page({
 
   /**
@@ -11,7 +12,8 @@ Page({
     inputVal: "",
     statusType: ["路段", "品牌"],
     currentType: 0,
-    tabClass: ["什么", "测试"]
+    tabClass: ["什么", "测试"],
+    bWaitingAddress: false
   },
   showInput: function () {
     this.setData({
@@ -54,6 +56,7 @@ Page({
    */
   onLoad: function (options) {
     var that = this;
+    this.bWaitingAddress = false;
     wx.getSystemInfo({
       success: function (res) {
         that.realWindowWidth = res.windowWidth
@@ -64,7 +67,32 @@ Page({
           resultHeight: height
         });
       }
-    })
+    });
+    // console.log("getSetting call");
+    // wx.getSetting({
+    //   success: function (res) {
+    //     console.log("getSetting success: " + res.authSetting['scope.address']);
+    //     if (res.authSetting['scope.address']) {
+    //       // chooseAddress已经授权
+    //       console.log("chooseAddress已经授权");
+    //     }
+    //     else {
+    //       console.log("chooseAddress未授权");
+    //       wx.chooseAddress({
+    //         success: function (res) {
+    //           console.log(res.userName)
+    //           console.log(res.postalCode)
+    //           console.log(res.provinceName)
+    //           console.log(res.cityName)
+    //           console.log(res.countyName)
+    //           console.log(res.detailInfo)
+    //           console.log(res.nationalCode)
+    //           console.log(res.telNumber)
+    //         }
+    //       });
+    //     }
+    //   }
+    // });
   },
 
   /**
@@ -86,6 +114,51 @@ Page({
   onShow: function () {
     console.log("onShow");
     var that = this;
+    if (undefined == app.globalData.userInfo.rPhoneNumber && false == this.bWaitingAddress) {
+      this.bWaitingAddress = true;
+      wx.chooseAddress({
+        success: function (res) {
+          console.log("userName" + res.userName);
+          console.log("postalCode" + res.postalCode);
+          console.log("provinceName" + res.provinceName);
+          console.log("cityName" + res.cityName);
+          console.log("countyName" + res.countyName);
+          console.log("detailInfo" + res.detailInfo);
+          console.log("nationalCode" + res.nationalCode);
+          console.log("telNumber" + res.telNumber);
+          app.globalData.userInfo.recipientname = res.userName;
+          app.globalData.userInfo.rPhonenumber = res.telNumber;
+          app.globalData.userInfo.recipientaddress = res.provinceName + res.cityName + res.countyName + res.detailInfo;
+          that.bWaitingAddress = false;
+          debugger
+          wx.request({
+            url: 'http://192.168.127.104:8086/user/update/recipient',
+            data: {
+              userID: app.globalData.userInfo.userid,
+              recipientName: app.globalData.userInfo.recipientname,
+              recipientAddress: app.globalData.userInfo.userecipientaddressr,
+              rPhoneNumber: app.globalData.userInfo.rphonenumber
+            },
+            success: function (res) {
+              console.log(res.data);
+              if (200 == res.data.statusCode) {
+                if (200 != res.data.data.code) {
+                  console.log("update address success.");
+                }
+              }
+              console.log("user/update/recipient: " + res.data.statusCode);
+            }
+          });
+        },
+        complete: function (){
+          console.log("chooseAddress complete");
+          that.bWaitingAddress = false;
+        }
+      });
+    }
+    else {
+      console.log("already had address || waiting...");
+    }
     var postData = {
       token: wx.getStorageSync('token')
     };

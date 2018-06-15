@@ -1,11 +1,18 @@
 // pages/package/package.js
+var inputinfo = "";  
+var app = getApp();
 Page({
 
   /**
    * 页面的初始数据
    */
   data: {
-  
+    messageMe: 'Hello MINA!',
+    array: [1, 2, 3, 4, 5],
+    packageList: [],  
+    animationData: "",
+    showModalStatus: false,
+    address: ""  
   },
 
   /**
@@ -13,7 +20,29 @@ Page({
    */
   onLoad: function (options) {
   //https://user-images.githubusercontent.com/2777305/40645613-759aaef4-6359-11e8-8b20-eff82b0355b1.png
-    var that = this
+    // 查看是否授权
+    var that = this;
+    wx.getSetting({
+      success: function (res) {
+        if (res.authSetting['scope.userInfo']) {
+          // 已经授权，可以直接调用 getUserInfo 获取头像昵称
+          console.log("已经授权，可以直接调用 getUserInfo 获取头像昵称");
+          wx.getUserInfo({
+            success: function (res) {
+              console.log("getUserInfo errMsg: " + res.errMsg)
+              app.globalData.userInfo = res.userInfo;
+              console.log(res.userInfo);
+              console.log("getUserInfo rawData: " + res.rawData);
+              that.updateUserInfo();
+            }
+          })
+        }
+        else {
+          console.log("getUserInfo 未授权"); 
+          that.showModal();
+        }
+      }
+    });
     that.setData({
       packageList: [{ "time": 2018, "title": "damon", "address":"hang"},
         { "time": 2019, "title": "damon", "address": "hangzhou" },
@@ -29,14 +58,49 @@ Page({
    * 生命周期函数--监听页面初次渲染完成
    */
   onReady: function () {
-  
+    console.log("packge onReady");
+    //获得dialog组件
+    // this.dialog = this.selectComponent("#dialog");
+    // console.log("dialog: " + this.dialog);
+    // this.dialog.showDialog();
   },
+  // showDialog: function () {
+  //   this.dialog.showDialog();
+  // },
 
+  // myConfirmEvent: function () {
+  //   this.dialog.hideDialog();
+  //   console.log("confirmEvent");
+  // },
+  // myBindGetUserInfo: function (e) {
+  //   // bind:confirmEvent='confirmEvent'
+  //   // bind: bindGetUserInfo = 'bindGetUserInfo'
+  // // "usingComponents": {
+  // //   "dialog": "../../components/dialog/dialog"
+  // // }
+  //   // 用户点击授权后，这里可以做一些登陆操作
+  //   console.log("bindGetUserInfo");
+  //   wx.showToast({
+  //     title: 'hahaahha授权',
+  //   })
+  // },
+  bindGetUserInfo: function(e){
+    console.log("bindGetUserInfo errMsg: " + e.detail.errMsg)
+    console.log("bindGetUserInfo userInfo: " + e.detail.userInfo)
+    app.globalData.userInfo = e.detail.userInfo;
+    console.log("bindGetUserInfo rawData: " + e.detail.rawData);
+    this.updateUserInfo();
+  },
+  confirmEvent: function(){
+    console.log("confirmEvent");
+    this.hideModal();
+  },
   /**
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
-  
+    console.log("package onShow");
+    // this.showDialog();
   },
 
   /**
@@ -82,11 +146,6 @@ Page({
   viewTapMe: function () {
     console.log('view tap me')
   },
-  data: {
-    messageMe: 'Hello MINA!',
-    array: [1, 2, 3, 4, 5],
-    packageList:[]  
-  },
   addNewList: function (e) {
     console.log("addNewList" + e.target.id);
     // wx.getUserInfo({
@@ -97,5 +156,118 @@ Page({
   },
   closePackage: function (e) {
     console.log("closePackage" + e.target.id);
+  },
+  updateUserInfo: function(){
+    wx.request({
+      url: 'http://192.168.127.104:8086/user/find',
+      data: {
+        openID: app.globalData.openid
+      },
+      success: function (res) {
+        console.log(res.data);
+        if (200 == res.data.statusCode){
+          if (40003 == res.data.data.code) {
+            wx.request({
+              url: 'http://192.168.127.104:8086/user/new',
+              data: {
+                nickName: app.globalData.userInfo.nickName,
+                avatarUrl: app.globalData.userInfo.avatarUrl,
+                phoneNumber: "15867139686",
+                gender: app.globalData.userInfo.gender,
+                openID: app.globalData.openid
+              },
+              success: function (res) {
+                console.log(res.data);
+                if (200 == res.data.statusCode) {
+                  console.log("new user create! " + res.data.data.code);
+                  wx.request({
+                    url: 'http://192.168.127.104:8086/user/find',
+                    data: {
+                      openID: app.globalData.openid
+                    },
+                    success: function (res) {
+                      console.log(res.data);
+                      if (200 == res.data.statusCode) {
+                        if (40003 != res.data.data.code) {
+                          app.globalData.userInfo = res.data.data.data;
+                        }
+                      }
+                      console.log("/user/new: " + res.data.statusCode);
+                    }
+                  });
+                }
+                console.log("/user/new: " + res.data.statusCode);
+              }
+            });
+          }
+          else {
+            app.globalData.userInfo = res.data.data.data;
+          }
+        }
+        if (200 == res.data.statusCode) {
+          
+        }
+        console.log("/user/find: " + res.data.statusCode);
+      }
+    });
+  },
+  showModal: function () {
+    // 显示遮罩层    
+    var animation = wx.createAnimation({
+      duration: 200,
+      timingFunction: "linear",
+      delay: 0
+    })
+    this.animation = animation
+    animation.translateY(300).step()
+    this.setData({
+      animationData: animation.export(),
+      showModalStatus: true
+    })
+    setTimeout(function () {
+      animation.translateY(0).step()
+      this.setData({
+        animationData: animation.export()
+      })
+    }.bind(this), 20)
+  },//myview 为点击控件的bindtap 应用时写在对应控件中就好  
+  myview: function () {
+    if (this.data.showModalStatus) {
+      this.hideModal();
+    } else {
+      this.showModal();
+    }
+  },
+  hideModal: function () {
+    // 隐藏遮罩层    
+    var animation = wx.createAnimation({
+      duration: 200,
+      timingFunction: "linear",
+      delay: 0
+    })
+    this.animation = animation
+    animation.translateY(300).step()
+    this.setData({
+      animationData: animation.export(),
+    })
+    setTimeout(function () {
+      animation.translateY(0).step()
+      this.setData({
+        animationData: animation.export(),
+        showModalStatus: false
+      })
+    }.bind(this), 20)
+  },
+  click_cancel: function () {
+    console.log("点击取消");
+    this.hideModal();
+  },
+  click_ok: function () {
+    console.log("点击确定，输入的信息为为==", inputinfo);
+    this.hideModal();
+  },
+  input_content: function (e) {
+    console.log(e);
+    inputinfo = e.detail.value;
   }
 })
