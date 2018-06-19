@@ -96,16 +96,25 @@
                 <view class="{{tabClass[index]}}"></view>
             </view>
         </view>
-        <view class="no-order" hidden="{{orderList ? true : false}}">
+        <view class="no-order" hidden="{{factoryList ? true : false}}">
             <image src="/images/no-order.png" class="no-order-img"></image>
             <view class="text">没有经销商</view>
         </view>
         <scroll-view scroll-y style='height:{{scrollHeight}}px;'>
-          <view class="order-list" hidden="{{orderList ? false : true}}">
-              <view class="a-order" wx:for-items="{{orderList}}" wx:key="{{index}}">
-                  <view class="order-date" id='{{index}}' bindtap='newOrderTap'>
+          <view class="order-list" hidden="{{factoryList ? false : true}}">
+              <view class="a-order goods" wx:for-items="{{factoryList}}" wx:key="{{index}}">
+                  <!-- <view class="order-date" id='{{index}}' bindtap='newOrderTap'>
                       <view class="date-box">下单时间：{{item.dateAdd}}</view>
                       <view class="status {{(item.status==-1 || item.status==4) ? '':'red'}}">{{item.statusStr}}</view>
+                  </view> -->
+                  <view class='goods' id='{{index}}' bindtap='newOrderTap'>
+                    <view class="img">
+                      <image src="{{item.list_pic_url}}"></image>
+                    </view>
+                    <view class="info">
+                        <text class="name">{{item.factoryname}}</text>
+                        <text class="number">{{item.contactaddress}}</text>
+                    </view>
                   </view>
               </view>
           </view>

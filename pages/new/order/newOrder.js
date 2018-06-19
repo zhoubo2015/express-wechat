@@ -7,6 +7,11 @@ Page({
   data: {
     realWindowWidth: 0,
     realWindowHeight: 0,
+    factoryID:"",
+    factoryName: "",
+    contactName: "",
+    phoneNumber: "",
+    contactAddress: "",
     statusType: ["备注", "状态"],
     currentType: 0,
     tabClass: ["什么", "测试"],
@@ -80,7 +85,18 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
+    /*options = {factoryID: "1", 
+    factoryName: "杭州阿里巴巴有限公司", 
+    contactName: "马云", 
+    contactAddress: "杭州未来科技城", 
+    phoneNumber: "15867139686"}*/
+    console.log(options);
     var that = this;
+    this.data.factoryID = options.factoryID;
+    this.data.factoryName = options.factoryName;
+    this.data.contactName = options.contactName;
+    this.data.contactAddress = options.contactAddress;
+    this.data.phoneNumber = options.phoneNumber;
     wx.getSystemInfo({
       success: function (res) {
         that.realWindowWidth = res.windowWidth
@@ -103,14 +119,14 @@ Page({
   onShow: function () {
     var height = this.realWindowHeight - 53;
     this.setData({
-      companyName: "huzhou",
-      contactName: "damondamondamon",
-      phoneNumber: "15867139686",
-      companyAddress: "hangzhoujian",
-      orderCount: "99",
-      orderWeight: "100",
-      orderMoney: "77",
-      orderDeadline: "2018-07-07 00:00",
+      companyName: this.data.factoryName,
+      contactName: this.data.contactName,
+      phoneNumber: this.data.phoneNumber,
+      companyAddress: this.data.contactAddress,
+      // orderCount: "99",
+      // orderWeight: "100",
+      // orderMoney: "77",
+      // orderDeadline: "2018-07-07 00:00",
       orderPicCount: "0",
       scrollHeight: height
     });
@@ -183,5 +199,8 @@ Page({
    */
   onShareAppMessage: function () {
 
+  },
+  bindTextAreaBlur: function (e) {
+    console.log(e.detail.value)
   }
 })

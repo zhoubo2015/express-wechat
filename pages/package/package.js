@@ -158,8 +158,9 @@ Page({
     console.log("closePackage" + e.target.id);
   },
   updateUserInfo: function(){
+    //查询是否存在
     wx.request({
-      url: 'http://192.168.127.104:8086/user/find',
+      url: 'http://192.168.127.100:8086/user/find',
       data: {
         openID: app.globalData.openid
       },
@@ -167,8 +168,9 @@ Page({
         console.log(res.data);
         if (200 == res.data.statusCode){
           if (40003 == res.data.data.code) {
+            //不存在，则创建新用户
             wx.request({
-              url: 'http://192.168.127.104:8086/user/new',
+              url: 'http://192.168.127.100:8086/user/new',
               data: {
                 nickName: app.globalData.userInfo.nickName,
                 avatarUrl: app.globalData.userInfo.avatarUrl,
@@ -180,8 +182,9 @@ Page({
                 console.log(res.data);
                 if (200 == res.data.statusCode) {
                   console.log("new user create! " + res.data.data.code);
+                  //新建后，重新获取一次用户数据
                   wx.request({
-                    url: 'http://192.168.127.104:8086/user/find',
+                    url: 'http://192.168.127.100:8086/user/find',
                     data: {
                       openID: app.globalData.openid
                     },
@@ -189,7 +192,7 @@ Page({
                       console.log(res.data);
                       if (200 == res.data.statusCode) {
                         if (40003 != res.data.data.code) {
-                          app.globalData.userInfo = res.data.data.data;
+                          app.globalData.userInfo = res.data.data.data[0];
                         }
                       }
                       console.log("/user/new: " + res.data.statusCode);
@@ -201,13 +204,19 @@ Page({
             });
           }
           else {
-            app.globalData.userInfo = res.data.data.data;
+            //存在用户
+            var test = (res.data.data.data[0]);
+            // debugger
+            app.globalData.userInfo = res.data.data.data[0];
           }
         }
         if (200 == res.data.statusCode) {
           
         }
         console.log("/user/find: " + res.data.statusCode);
+      },
+      fail:function(){
+        console.log("/user/find: api failed");
       }
     });
   },

@@ -15,7 +15,8 @@ App({
       success: function () {
         //session_key 未过期，并且在本生命周期一直有效
         console.log("session_key 未过期，并且在本生命周期一直有效");
-        that.globalData.hasLogin = true
+        that.globalData.hasLogin = true;
+        that.globalData.openid = "oxiEr5Ox2L7goNZTKGY5IRGIl0sI";
         // app.globalData.hasLogin = true
         wx.getStorage({
           key: 'localOpenID',
@@ -36,7 +37,7 @@ App({
             if (res.code) {
               //发起网络请求
               wx.request({
-                url: 'http://192.168.127.104:8086/webChat/sessionKey',
+                url: 'http://192.168.127.100:8086/webChat/sessionKey',
                 data: {
                   code: res.code
                 },

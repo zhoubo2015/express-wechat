@@ -13,7 +13,8 @@ Page({
     statusType: ["路段", "品牌"],
     currentType: 0,
     tabClass: ["什么", "测试"],
-    bWaitingAddress: false
+    bWaitingAddress: false,
+    factoryList: undefined
   },
   showInput: function () {
     this.setData({
@@ -46,9 +47,10 @@ Page({
     this.onShow();
   },
   newOrderTap: function (e){
-    console.log("newOrderTap" + e.target.id);
+    console.log("newOrderTap:" + e.currentTarget.id);
+    var index = e.currentTarget.id;
     wx.navigateTo({
-      url: 'order/newOrder',
+      url: 'order/newOrder?factoryID=' + this.factoryList[index].factoryid + '&factoryName=' + this.factoryList[index].factoryname + '&contactName=' + this.factoryList[index].contactname + '&contactAddress=' + this.factoryList[index].contactaddress + '&phoneNumber=' + this.factoryList[index].phonenumber
     })
   },
   /**
@@ -114,7 +116,7 @@ Page({
   onShow: function () {
     console.log("onShow");
     var that = this;
-    if (undefined == app.globalData.userInfo.rPhoneNumber && false == this.bWaitingAddress) {
+    if (undefined == app.globalData.userInfo.rphonenumber && false == this.bWaitingAddress) {
       this.bWaitingAddress = true;
       wx.chooseAddress({
         success: function (res) {
@@ -127,16 +129,16 @@ Page({
           console.log("nationalCode" + res.nationalCode);
           console.log("telNumber" + res.telNumber);
           app.globalData.userInfo.recipientname = res.userName;
-          app.globalData.userInfo.rPhonenumber = res.telNumber;
+          app.globalData.userInfo.rphonenumber = res.telNumber;
           app.globalData.userInfo.recipientaddress = res.provinceName + res.cityName + res.countyName + res.detailInfo;
           that.bWaitingAddress = false;
-          debugger
+          // debugger
           wx.request({
-            url: 'http://192.168.127.104:8086/user/update/recipient',
+            url: 'http://192.168.127.100:8086/user/update/recipient',
             data: {
               userID: app.globalData.userInfo.userid,
               recipientName: app.globalData.userInfo.recipientname,
-              recipientAddress: app.globalData.userInfo.userecipientaddressr,
+              recipientAddress: app.globalData.userInfo.recipientaddress,
               rPhoneNumber: app.globalData.userInfo.rphonenumber
             },
             success: function (res) {
@@ -166,30 +168,39 @@ Page({
     // this.getOrderStatistics();
     console.log("currentType:" + that.data.currentType);
     if (0 == that.data.currentType) {
-      this.setData({
-        orderList: [{ "dateAdd": 2018, "statusStr": "2018060911101"},
-          { "dateAdd": 2019, "statusStr": "2018060911101" },
-          { "dateAdd": 2020, "statusStr": "2018060911101" }],
-        logisticsMap: {},
-        goodsMap: {}
+      wx.request({
+        url: 'http://192.168.127.100:8086/factory/find',
+        data: {
+          
+        },
+        success: function (res) {
+          console.log(res.data);
+          if (200 == res.data.statusCode) {
+            that.factoryList = res.data.data;
+            that.setData({
+              factoryList: that.factoryList
+            });
+          }
+          console.log("/factory/find: " + res.data.statusCode);
+        }
       });
     }
     else {
-      this.setData({
-        orderList: [{ "dateAdd": 1990, "statusStr": "2018060911100"},
-          { "dateAdd": 1991, "statusStr": "2018060911100"},
-          { "dateAdd": 1992, "statusStr": "2018060911100" },
-          { "dateAdd": 1993, "statusStr": "2018060911100"},
-          { "dateAdd": 1994, "statusStr": "2018060911100"},
-          { "dateAdd": 1995, "statusStr": "2018060911100"},
-          { "dateAdd": 1996, "statusStr": "2018060911100" },
-          { "dateAdd": 1997, "statusStr": "2018060911100"},
-          { "dateAdd": 1998, "statusStr": "2018060911100" },
-          { "dateAdd": 1999, "statusStr": "2018060911100" },
-          { "dateAdd": 2000, "statusStr": "2018060911100" },
-          { "dateAdd": 2001, "statusStr": "2018060911100" }],
-        logisticsMap: {},
-        goodsMap: {}
+      wx.request({
+        url: 'http://192.168.127.100:8086/factory/find',
+        data: {
+
+        },
+        success: function (res) {
+          console.log(res.data);
+          if (200 == res.data.statusCode) {
+            that.factoryList = res.data.data;
+            that.setData({
+              factoryList: that.factoryList
+            });
+          }
+          console.log("/factory/find: " + res.data.statusCode);
+        }
       });
     }
   },
