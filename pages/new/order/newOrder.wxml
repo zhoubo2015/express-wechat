@@ -68,7 +68,7 @@
     </view>
      <view class="order-detail-view"> 
       <!-- <view class="textarea-wrp"> -->
-        <textarea bindblur="bindTextAreaBlur" placeholder='请输入备注...' />
+        <textarea bindblur="bindTextAreaBlur" placeholder='请输入备注...'></textarea>
       <!-- </view> -->
      </view> 
   </scroll-view>
