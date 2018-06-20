@@ -26,8 +26,10 @@
 }
 .text-custom{
   display: block;
+  padding-left: 10px;
 }
 .textview-custom{
+  padding-left: 10px;
   display: -webkit-box ;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -160,7 +162,7 @@
 }
  textarea {
   width: 100%;
-  height: 150px;
+  height: 110px;
   /* padding: 25rpx 0; */
 } 
 

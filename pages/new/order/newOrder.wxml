@@ -66,12 +66,18 @@
         <view class="weui-cell__ft weui-cell__ft_in-access">{{orderPicCount}}个附件</view>
       </navigator>
     </view>
-     <view class="order-detail-view"> 
-      <!-- <view class="textarea-wrp"> -->
-        <textarea bindblur="bindTextAreaBlur" placeholder='请输入备注...'></textarea>
-      <!-- </view> -->
-     </view> 
+    <view class='order-detail-view'>
+      <navigator bindtap='addOrderTips' class="weui-cell weui-cell_access" hover-class="weui-cell_active">
+        <view class="weui-cell__bd">添加备注</view>
+      </navigator>
+    </view>
   </scroll-view>
+
+  <modal class="modal" hidden="{{tipsHidden}}" title="添加备注" confirm-text="确认" bindconfirm="tipsConfirm" no-cancel="true">  
+    <form bindsubmit="evaSubmit">  
+        <textarea bindblur='bindTextAreaBlur' class='text' placeholder="请输入备注信息..." />  
+    </form>
+  </modal> 
 
   <view class='tab-bottom'>
     <button id='' class="weui-btn" type="primary" plain="true" bindtap="addNewList">确定按钮</button>

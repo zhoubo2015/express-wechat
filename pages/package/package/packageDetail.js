@@ -2,9 +2,12 @@
 var app = getApp()
 Page({
   data: {
-    statusType: ["待付款", "待发货", "待收货", "待评价", "已完成"],
+    statusType: ["未入库", "已改期", "已入库", "总订单"],
     currentType: 0,
-    tabClass: ["", "", "", "", ""]
+    tabClass: ["", "", "", ""],
+    packageID: "",
+    storeID: "",
+    packageNumber: ""
   },
   statusTap: function (e) {
     var curType = e.currentTarget.dataset.index;
@@ -99,7 +102,16 @@ Page({
   },
   onLoad: function (options) {
     // 生命周期函数--监听页面加载
-
+    console.log("onLoad: " + options.packageID);
+    console.log("onLoad: " + options.storeID);
+    console.log("onLoad: " + options.packageNumber);
+    this.data.packageID = options.packageID;
+    this.data.storeID = options.storeID;
+    this.data.packageNumber = options.packageNumber;
+    this.setData({
+      storeID: this.data.storeID,
+      packageNumber: this.data.packageNumber
+    });
   },
   onReady: function () {
     // 生命周期函数--监听页面初次渲染完成

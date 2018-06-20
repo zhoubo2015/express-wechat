@@ -1,4 +1,5 @@
 // pages/new/order/newOrder.js
+var app = getApp();
 Page({
 
   /**
@@ -19,7 +20,9 @@ Page({
     date: "2018-06-12",
     orderCount: "0",
     orderWeight: "0",
-    orderMoney: "0"
+    orderMoney: "0",
+    tipsText: "",
+    bNewPackage: false
   },
   statusTap: function (e) {
     var curType = e.currentTarget.dataset.index;
@@ -40,15 +43,15 @@ Page({
     })
   },
   inputCountChange: function (e) {
-    this.orderCount = e.detail.value;
+    this.data.orderCount = e.detail.value;
     console.log("input count: " + e.detail.value);
   },
   inputWeightChange: function (e) {
-    this.orderWeight = e.detail.value;
+    this.data.orderWeight = e.detail.value;
     console.log("input weight: " + e.detail.value);
   },
   inputMoneyChange: function (e) {
-    this.orderMoney = e.detail.value;
+    this.data.orderMoney = e.detail.value;
     console.log("input money: " + e.detail.value);
   },
   chooseImage: function () {
@@ -80,6 +83,20 @@ Page({
         })
       }
     })
+  },
+  addOrderTips: function (){
+    this.setData({
+      tipsHidden: false
+    });
+  },
+  tipsConfirm: function(e){
+    this.setData({
+      tipsHidden: true
+    });
+  },
+  bindTextAreaBlur: function (e) {
+    console.log(e.detail.value);
+    this.data.tipsText = e.detail.value;
   },
   /**
    * 生命周期函数--监听页面加载
@@ -128,7 +145,8 @@ Page({
       // orderMoney: "77",
       // orderDeadline: "2018-07-07 00:00",
       orderPicCount: "0",
-      scrollHeight: height
+      scrollHeight: height,
+      tipsHidden: true
     });
 
     var that = this;
@@ -200,7 +218,51 @@ Page({
   onShareAppMessage: function () {
 
   },
-  bindTextAreaBlur: function (e) {
-    console.log(e.detail.value)
+  addNewList: function(e){
+    console.log("addNewList touched.");
+    console.log("userid: " + app.globalData.userInfo.userid);
+    var that = this;
+    wx.request({
+      url: 'http://192.168.127.100:8086/package/new',
+      data: {
+        userID: app.globalData.userInfo.userid,
+        storeID: "A01",
+        expressCompany: "顺丰"
+      },
+      success: function (res) {
+        console.log(res.data);
+        if (200 == res.data.statusCode) {
+          debugger
+          console.log(res.data.data.data.packageid);
+          console.log("date:" + that.data.date);
+          console.log("time:" + that.data.time);
+          var timeStr = that.data.date + " " + that.data.time;
+          var timeStampDate = new Date(timeStr); 
+          var timeStamp = timeStampDate.getTime();
+          console.log("timeStamp: " + timeStamp);
+          var packageid = res.data.data.data.packageid;
+          wx.request({
+            url: 'http://192.168.127.100:8086/order/new',
+            data: {
+              packageID: packageid,
+              factoryID: that.data.factoryID,
+              orderCount: that.data.orderCount,
+              orderWeight: that.data.orderWeight,
+              orderMoney: that.data.orderMoney,
+              orderNote: that.data.tipsText,
+              deadlineDate: timeStamp
+            },
+            success: function (res){
+              console.log(res.data);
+              if (200 == res.data.statusCode) {       
+                // console.log(res.data.data.orderid);
+              }
+              console.log("/package/new: " + res.data.statusCode);
+            }
+          });
+        }
+        console.log("/package/new: " + res.data.statusCode);
+      }
+    });
   }
 })

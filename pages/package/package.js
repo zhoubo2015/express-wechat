@@ -43,15 +43,15 @@ Page({
         }
       }
     });
-    that.setData({
-      packageList: [{ "time": 2018, "title": "damon", "address":"hang"},
-        { "time": 2019, "title": "damon", "address": "hangzhou" },
-        { "time": 2020, "title": "damon11", "address": "hang" },
-        { "time": 2021, "title": "da", "address": "hangzhou" },
-        { "time": 2022, "title": "damon", "address": "hangzhou" },
-        { "time": 2023, "title": "damon", "address": "hangzhou" },
-        { "time": 2024, "title": "damon", "address": "hangzhou" }] 
-    });  
+    // that.setData({
+    //   packageList: [{ "time": 2018, "title": "damon", "address":"hang"},
+    //     { "time": 2019, "title": "damon", "address": "hangzhou" },
+    //     { "time": 2020, "title": "damon11", "address": "hang" },
+    //     { "time": 2021, "title": "da", "address": "hangzhou" },
+    //     { "time": 2022, "title": "damon", "address": "hangzhou" },
+    //     { "time": 2023, "title": "damon", "address": "hangzhou" },
+    //     { "time": 2024, "title": "damon", "address": "hangzhou" }] 
+    // });  
   },
 
   /**
@@ -157,7 +157,65 @@ Page({
   closePackage: function (e) {
     console.log("closePackage" + e.target.id);
   },
+  updatePackageList: function() {
+    var that = this;
+    wx.request({
+      url: 'http://192.168.127.100:8086/package/find',
+      data: {
+        userID: app.globalData.userInfo.userid,
+      },
+      success: function (res) {
+        console.log(res.data);
+        if (200 == res.data.statusCode) {
+          var list = res.data.data;
+          console.log("packageList: " + list);
+          for (var i = 0; i < list.length; i++) {
+            console.log(list[i]);
+            var unarrived = 0;
+            var modify = 0;
+            var arrived = 0;
+            var totalOrder = list[i].orderList.length;
+            var deadTime = list[i].orderList[0].deadlinedate;
+            var totalTips = list[i].orderList.length;
+            for (var j = 0; j < list[i].orderList.length; j++) {
+              if (deadTime < list[i].orderList[j].deadlinedate){
+                deadTime = list[i].orderList[j].deadlinedate;
+              }
+              switch (list[i].orderList[j].orderstatus){
+                case 0:{
+                  unarrived = unarrived + 1;
+                }
+                  break;
+                case 1:{
+                  modify = modify + 1;
+                }
+                  break;
+                case 2: {
+                  arrived = arrived + 1;
+                }
+                  break;
+                default:
+                  break;
+              }
+            }
+            list[i]['unarrived'] = unarrived;
+            list[i]['modify'] = modify;
+            list[i]['arrived'] = arrived;
+            list[i]['totalOrder'] = totalOrder;
+            list[i]['totalTips'] = totalTips;
+            list[i]['deadTime'] = deadTime;
+          }
+          console.log("changed list:" + list);
+          that.data.packageList = list;
+          that.setData({
+            packageList: that.data.packageList
+          });
+        }
+      }
+    })
+  },
   updateUserInfo: function(){
+    var that = this;
     //查询是否存在
     wx.request({
       url: 'http://192.168.127.100:8086/user/find',
@@ -193,6 +251,7 @@ Page({
                       if (200 == res.data.statusCode) {
                         if (40003 != res.data.data.code) {
                           app.globalData.userInfo = res.data.data.data[0];
+                          that.updatePackageList();
                         }
                       }
                       console.log("/user/new: " + res.data.statusCode);
@@ -208,6 +267,7 @@ Page({
             var test = (res.data.data.data[0]);
             // debugger
             app.globalData.userInfo = res.data.data.data[0];
+            that.updatePackageList();
           }
         }
         if (200 == res.data.statusCode) {
