@@ -1,4 +1,4 @@
-// pages/new/new.js
+// pages/package/order/addOrder.js
 var app = getApp()
 Page({
 
@@ -47,17 +47,17 @@ Page({
     });
     this.onShow();
   },
-  newOrderTap: function (e){
+  newOrderTap: function (e) {
     console.log("newOrderTap:" + e.currentTarget.id);
     var index = e.currentTarget.id;
     if (undefined != this.data.packageID) {
       wx.navigateTo({
-        url: 'order/newOrder?factoryID=' + this.factoryList[index].factoryid + '&factoryName=' + this.factoryList[index].factoryname + '&contactName=' + this.factoryList[index].contactname + '&contactAddress=' + this.factoryList[index].contactaddress + '&phoneNumber=' + this.factoryList[index].phonenumber + '&packageID=' + this.data.packageID
+        url: '/pages/new/order/newOrder?factoryID=' + this.factoryList[index].factoryid + '&factoryName=' + this.factoryList[index].factoryname + '&contactName=' + this.factoryList[index].contactname + '&contactAddress=' + this.factoryList[index].contactaddress + '&phoneNumber=' + this.factoryList[index].phonenumber + '&packageID=' + this.data.packageID
       });
     }
     else {
       wx.navigateTo({
-        url: 'order/newOrder?factoryID=' + this.factoryList[index].factoryid + '&factoryName=' + this.factoryList[index].factoryname + '&contactName=' + this.factoryList[index].contactname + '&contactAddress=' + this.factoryList[index].contactaddress + '&phoneNumber=' + this.factoryList[index].phonenumber
+        url: '/pages/new/order/newOrder?factoryID=' + this.factoryList[index].factoryid + '&factoryName=' + this.factoryList[index].factoryname + '&contactName=' + this.factoryList[index].contactname + '&contactAddress=' + this.factoryList[index].contactaddress + '&phoneNumber=' + this.factoryList[index].phonenumber
       });
     }
   },
@@ -163,7 +163,7 @@ Page({
             }
           });
         },
-        complete: function (){
+        complete: function () {
           console.log("chooseAddress complete");
           that.bWaitingAddress = false;
         }
@@ -182,7 +182,7 @@ Page({
       wx.request({
         url: 'http://192.168.127.100:8086/factory/find',
         data: {
-          
+
         },
         success: function (res) {
           console.log(res.data);
@@ -220,39 +220,39 @@ Page({
    * 生命周期函数--监听页面隐藏
    */
   onHide: function () {
-  
+
   },
 
   /**
    * 生命周期函数--监听页面卸载
    */
   onUnload: function () {
-  
+
   },
 
   /**
    * 页面相关事件处理函数--监听用户下拉动作
    */
   onPullDownRefresh: function () {
-  
+
   },
 
   /**
    * 页面上拉触底事件的处理函数
    */
   onReachBottom: function () {
-  
+
   },
 
   /**
    * 用户点击右上角分享
    */
   onShareAppMessage: function () {
-  
+
   },
   newCompany: function () {
     wx.navigateTo({
-      url: 'addCompany/newCompany',
+      url: '/pages/new/addCompany/newCompany',
     });
   }
 })

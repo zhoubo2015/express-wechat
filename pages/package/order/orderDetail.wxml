@@ -3,48 +3,48 @@
   <scroll-view scroll-y style='height:{{scrollHeight}}px;'>
     <view class='order-detail-view'>
       <view>
-        <text class='text-custom'>Company:{{companyName}}</text>
-        <text class='text-custom'>Contact:{{contactName}}</text>
+        <text class='text-custom'>供应商信息:{{companyName}}</text>
+        <text class='text-custom'>联系人:{{contactName}}</text>
         <view class='phone-number'>
-          <text class='text-custom'>Number:{{phoneNumber}}</text>
-          <button class='phone-number-button'>按钮</button>
+          <text class='text-custom'>联系方式:{{phoneNumber}}</text>
+          <button class='phone-number-button'>呼叫</button>
         </view>
-        <text class='textview-custom'>Address:{{companyAddress}}</text>
+        <text class='textview-custom'>{{companyAddress}}</text>
       </view>
       <view class='virtual-line'></view>
       <view>
           <view class="weui-cell">
-              <view class="weui-cell__bd">order Status</view>
-              <view class="weui-cell__ft weui-cell__ft-color">no complete</view>
+              <view class="weui-cell__bd">订单状态</view>
+              <view class="weui-cell__ft weui-cell__ft-color">{{orderstatustext}}</view>
           </view>
           <view class="weui-cell">
-              <view class="weui-cell__bd weui-cell__bd-color">order number</view>
-              <view class="weui-cell__ft">201806120001</view>
+              <view class="weui-cell__bd weui-cell__bd-color">订单号</view>
+              <view class="weui-cell__ft">{{ordernumber}}</view>
           </view>
           <view class="weui-cell">
-              <view class="weui-cell__bd weui-cell__bd-color">order Time</view>
-              <view class="weui-cell__ft">2018-12-12 19:15</view>
+              <view class="weui-cell__bd weui-cell__bd-color">下单时间</view>
+              <view class="weui-cell__ft">{{createdate}}</view>
           </view>
       </view>
       <view class='virtual-line'></view>
       <view>
           <view class="weui-cell">
-              <view class="weui-cell__bd weui-cell__bd-color">order Count</view>
+              <view class="weui-cell__bd weui-cell__bd-color">商品数量</view>
               <view class="weui-cell__ft">{{orderCount}}</view>
           </view>
           <view class="weui-cell">
-              <view class="weui-cell__bd weui-cell__bd-color">order Weight</view>
+              <view class="weui-cell__bd weui-cell__bd-color">商品重量</view>
               <view class="weui-cell__ft">{{orderWeight}}</view>
           </view>
           <view class="weui-cell">
-              <view class="weui-cell__bd weui-cell__bd-color">order Money</view>
+              <view class="weui-cell__bd weui-cell__bd-color">商品金额</view>
               <view class="weui-cell__ft">${{orderMoney}}</view>
           </view>
       </view>
       <view class='virtual-line'></view>
       <view>
           <view class="weui-cell">
-              <view class="weui-cell__bd">Deadline</view>
+              <view class="weui-cell__bd">截止时间</view>
               <view class="weui-cell__ft weui-cell__ft-color-red">{{orderDeadline}}</view>
           </view>
       </view>
@@ -63,17 +63,24 @@
                 <view class="{{tabClass[index]}}"></view>
             </view>
         </view>
-        <view class="no-order" hidden="{{orderList ? true : false}}">
+        <!-- <view class="no-order" hidden="{{infoList ? true : false}}">
             <image src="/images/no-order.png" class="no-order-img"></image>
-            <view class="text">没有经销商</view>
-        </view>
+            <view class="text">没有相关信息</view>
+        </view> -->
         <scroll-view scroll-y style='height:200px;'>
-          <view class="order-list" hidden="{{orderList ? false : true}}">
-              <view class="a-order" wx:for-items="{{orderList}}" wx:key="{{index}}">
-                  <view class="order-date">
-                      <view class="date-box">下单时间：{{item.dateAdd}}</view>
-                      <view class="status {{(item.status==-1 || item.status==4) ? '':'red'}}">{{item.statusStr}}</view>
+          <view class="no-order" hidden="{{infoList ? true : false}}">
+              <image src="/images/no-order.png" class="no-order-img"></image>
+              <view class="text">没有相关信息</view>
+          </view>
+          <view class="order-list" hidden="{{infoList ? false : true}}">
+              <view class="a-order" wx:for-items="{{infoList}}" wx:key="{{index}}">
+                  <view>
+                    <text>{{item}}</text>
                   </view>
+                  <!-- <view class="order-date">
+                      <view class="date-box">下单时间：{{item}}</view>
+                      <view class="status {{(item.status==-1 || item.status==4) ? '':'red'}}">{{item}}</view>
+                  </view> -->
               </view>
           </view>
         </scroll-view>

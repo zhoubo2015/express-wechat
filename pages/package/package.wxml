@@ -25,7 +25,7 @@
   <view>
     <text class='text-center'>配货中心客户端</text>
   </view> 
-  <view class='package-list-end' wx:for="{{packageList}}">  
+  <view class='package-list-end' wx:for-items="{{packageList}}" wx:key="{{index}}">  
     <view class='package-list'>
       <view class='package-info'>
         <text style='font-size:17px;padding-left:5px;color:red;'>{{item.storeid}}库</text>

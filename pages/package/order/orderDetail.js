@@ -9,20 +9,40 @@ Page({
     realWindowHeight: 0,
     statusType: ["备注", "状态"],
     currentType: 0,
-    tabClass: ["什么", "测试"]
+    tabClass: ["什么", "测试"],
+    orderID: "",
+    orderInfo: undefined,
+    infoList: []
   },
   statusTap: function (e) {
     var curType = e.currentTarget.dataset.index;
     this.data.currentType = curType
-    this.setData({
-      currentType: curType
-    });
-    this.onShow();
+    console.log("currentType:" + this.data.currentType);
+    this.data.infoList = [];
+    if (0 == this.data.currentType) {
+      this.data.infoList.splice(0, 0, this.data.orderInfo.ordernote);
+      this.setData({
+        infoList: this.data.infoList,
+        currentType: curType
+      });
+    }
+    else {
+      var changeInfo = this.data.orderInfo.orderchanges;
+      changeInfo = changeInfo.replace(",", "\n");
+      this.data.infoList.splice(0, 0, changeInfo);
+      this.setData({
+        infoList: this.data.infoList,
+        currentType: curType
+      });
+    }
+    // this.onShow();
   },
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
+    console.log("orderID: " + options.orderID);
+    this.data.orderID = options.orderID;
     var that = this;
     wx.getSystemInfo({
       success: function (res) {
@@ -46,51 +66,68 @@ Page({
   onShow: function () {
     var height = this.realWindowHeight - 53;
     this.setData({
-      companyName: "huzhou",
-      contactName: "damondamondamon",
-      phoneNumber: "15867139686",
-      companyAddress: "hangzhoujian",
-      orderCount: "99",
-      orderWeight: "100",
-      orderMoney: "77",
-      orderDeadline: "2018-07-07 00:00",
-      orderPicCount: "2",
       scrollHeight: height
     });
 
     var that = this;
-    var postData = {
-      token: wx.getStorageSync('token')
-    };
-    postData.status = that.data.currentType;
-    // this.getOrderStatistics();
-    console.log("currentType:" + that.data.currentType);
-    if (0 == that.data.currentType) {
-      this.setData({
-        orderList: [{ "dateAdd": 2018, "statusStr": "防水" },
-        { "dateAdd": 2019, "statusStr": "小心轻放" }],
-        logisticsMap: {},
-        goodsMap: {}
-      });
-    }
-    else {
-      this.setData({
-        orderList: [{ "dateAdd": 1990, "statusStr": "等待入库" },
-        { "dateAdd": 1991, "statusStr": "等待库了" },
-        { "dateAdd": 1992, "statusStr": "超时了" },
-        { "dateAdd": 1993, "statusStr": "已入库" },
-        { "dateAdd": 1994, "statusStr": "完成" },
-        { "dateAdd": 1995, "statusStr": "2018060911100" },
-        { "dateAdd": 1996, "statusStr": "2018060911100" },
-        { "dateAdd": 1997, "statusStr": "2018060911100" },
-        { "dateAdd": 1998, "statusStr": "2018060911100" },
-        { "dateAdd": 1999, "statusStr": "2018060911100" },
-        { "dateAdd": 2000, "statusStr": "2018060911100" },
-        { "dateAdd": 2001, "statusStr": "2018060911100" }],
-        logisticsMap: {},
-        goodsMap: {}
-      });
-    }
+    wx.request({
+      url: 'http://192.168.127.100:8086/order/findbyid',
+      data: {
+        orderID: that.data.orderID
+      },
+      success: function (res) {
+        console.log("/order/findbyid:" + res.data);
+        if (200 == res.data.statusCode) {
+          that.data.orderInfo = res.data.data.data;
+          console.log(that.data.orderInfo);
+          var orderstatustext = "";
+          if (0 == that.data.orderInfo.orderstatus) {
+            orderstatustext = "等待厂家配货";
+          }
+          else if (1 == that.data.orderInfo.orderstatus) {
+            orderstatustext = "该订单已改期";
+          }
+          else if (2 == that.data.orderInfo.orderstatus) {
+            orderstatustext = "配货中心已入库";
+          }
+          that.setData({
+            orderstatustext: orderstatustext,
+            ordernumber: that.data.orderInfo.ordernumber,
+            createdate: that.data.orderInfo.createdate,
+            companyName: that.data.orderInfo.factoryInfo.factoryname,
+            contactName: that.data.orderInfo.factoryInfo.contactname,
+            phoneNumber: that.data.orderInfo.factoryInfo.phonenumber,
+            companyAddress: that.data.orderInfo.factoryInfo.contactaddress,
+            orderCount: that.data.orderInfo.ordercount,
+            orderWeight: that.data.orderInfo.orderweight,
+            orderMoney: that.data.orderInfo.ordermoney,
+            orderDeadline: that.data.orderInfo.deadlinedate,
+            orderPicCount: "0"
+          });
+
+          //处理首次刷新时的备注栏和状态栏
+          console.log("currentType:" + that.data.currentType);
+          that.data.infoList = [];
+          if (0 == that.data.currentType) {
+            that.data.infoList.splice(0, 0, that.data.orderInfo.ordernote);
+            that.setData({
+              infoList: that.data.infoList,
+              currentType: that.data.currentType
+            });
+          }
+          else {
+            var changeInfo = that.data.orderInfo.orderchanges;
+            changeInfo = changeInfo.replace(",", "\n");
+            that.data.infoList.splice(0, 0, changeInfo);
+            that.setData({
+              infoList: that.data.infoList,
+              currentType: that.data.currentType
+            });
+          }
+        }
+        console.log("/order/findbyid: " + res.data.statusCode);
+      }
+    });
   },
 
   /**

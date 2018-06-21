@@ -3,7 +3,7 @@ App({
   globalData: {
     hasLogin: false,
     openid: null,
-    userInfo: null
+    userInfo: undefined
   },
   onLaunch: function (options) {
     // Do something initial when launch.

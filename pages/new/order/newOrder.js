@@ -8,7 +8,8 @@ Page({
   data: {
     realWindowWidth: 0,
     realWindowHeight: 0,
-    factoryID:"",
+    packageID: undefined,
+    factoryID: "",
     factoryName: "",
     contactName: "",
     phoneNumber: "",
@@ -78,6 +79,23 @@ Page({
       sourceType: [type],
       success: function (res) {
         console.log(res);
+        var tempFilePaths = res.tempFilePaths
+        wx.uploadFile({
+          url: 'http://192.168.127.100:8086/pic/upload', //仅为示例，非真实的接口地址
+          filePath: tempFilePaths[0],
+          name: 'file',
+          formData: {
+            'user': 'test'
+          },
+          success: function (res) {
+            var data = res.data
+            console.log("/pic/upload/ " + res.data);
+            //do something
+          },
+          fail: function (res) {
+            console.log("/pic/upload/ " + res.errMsg);
+          }
+        })
         that.setData({
           tempFilePaths: res.tempFilePaths[0],
         })
@@ -108,6 +126,9 @@ Page({
     contactAddress: "杭州未来科技城", 
     phoneNumber: "15867139686"}*/
     console.log(options);
+    if (undefined != options.packageID) {
+      this.data.packageID = options.packageID;
+    }
     var that = this;
     this.data.factoryID = options.factoryID;
     this.data.factoryName = options.factoryName;
@@ -222,47 +243,81 @@ Page({
     console.log("addNewList touched.");
     console.log("userid: " + app.globalData.userInfo.userid);
     var that = this;
-    wx.request({
-      url: 'http://192.168.127.100:8086/package/new',
-      data: {
-        userID: app.globalData.userInfo.userid,
-        storeID: "A01",
-        expressCompany: "顺丰"
-      },
-      success: function (res) {
-        console.log(res.data);
-        if (200 == res.data.statusCode) {
-          debugger
-          console.log(res.data.data.data.packageid);
-          console.log("date:" + that.data.date);
-          console.log("time:" + that.data.time);
-          var timeStr = that.data.date + " " + that.data.time;
-          var timeStampDate = new Date(timeStr); 
-          var timeStamp = timeStampDate.getTime();
-          console.log("timeStamp: " + timeStamp);
-          var packageid = res.data.data.data.packageid;
-          wx.request({
-            url: 'http://192.168.127.100:8086/order/new',
-            data: {
-              packageID: packageid,
-              factoryID: that.data.factoryID,
-              orderCount: that.data.orderCount,
-              orderWeight: that.data.orderWeight,
-              orderMoney: that.data.orderMoney,
-              orderNote: that.data.tipsText,
-              deadlineDate: timeStamp
-            },
-            success: function (res){
-              console.log(res.data);
-              if (200 == res.data.statusCode) {       
-                // console.log(res.data.data.orderid);
-              }
-              console.log("/package/new: " + res.data.statusCode);
-            }
-          });
+    if (undefined != that.data.packageID) {
+      console.log("date:" + that.data.date);
+      console.log("time:" + that.data.time);
+      var timeStr = that.data.date + " " + that.data.time;
+      var timeStampDate = new Date(timeStr);
+      var timeStamp = timeStampDate.getTime();
+      console.log("timeStamp: " + timeStamp);
+      wx.request({
+        url: 'http://192.168.127.100:8086/order/new',
+        data: {
+          packageID: that.data.packageID,
+          factoryID: that.data.factoryID,
+          orderCount: that.data.orderCount,
+          orderWeight: that.data.orderWeight,
+          orderMoney: that.data.orderMoney,
+          orderNote: that.data.tipsText,
+          deadlineDate: timeStamp
+        },
+        success: function (res) {
+          console.log(res.data);
+          if (200 == res.data.statusCode) {
+            // console.log(res.data.data.orderid);
+            wx.navigateBack({
+              delta: 2
+            });
+          }
+          console.log("/package/new: " + res.data.statusCode);
         }
-        console.log("/package/new: " + res.data.statusCode);
-      }
-    });
+      });
+    }
+    else {
+      wx.request({
+        url: 'http://192.168.127.100:8086/package/new',
+        data: {
+          userID: app.globalData.userInfo.userid,
+          storeID: "A01",
+          expressCompany: "顺丰"
+        },
+        success: function (res) {
+          console.log(res.data);
+          if (200 == res.data.statusCode) {
+            console.log(res.data.data.data.packageid);
+            console.log("date:" + that.data.date);
+            console.log("time:" + that.data.time);
+            var timeStr = that.data.date + " " + that.data.time;
+            var timeStampDate = new Date(timeStr);
+            var timeStamp = timeStampDate.getTime();
+            console.log("timeStamp: " + timeStamp);
+            var packageid = res.data.data.data.packageid;
+            wx.request({
+              url: 'http://192.168.127.100:8086/order/new',
+              data: {
+                packageID: packageid,
+                factoryID: that.data.factoryID,
+                orderCount: that.data.orderCount,
+                orderWeight: that.data.orderWeight,
+                orderMoney: that.data.orderMoney,
+                orderNote: that.data.tipsText,
+                deadlineDate: timeStamp
+              },
+              success: function (res) {
+                console.log(res.data);
+                if (200 == res.data.statusCode) {
+                  // console.log(res.data.data.orderid);
+                  wx.navigateBack({
+                    delta: 1
+                  });
+                }
+                console.log("/package/new: " + res.data.statusCode);
+              }
+            });
+          }
+          console.log("/package/new: " + res.data.statusCode);
+        }
+      });
+    }
   }
 })

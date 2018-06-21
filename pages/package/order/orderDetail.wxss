@@ -26,8 +26,10 @@
 }
 .text-custom{
   display: block;
+  padding-left: 10px;
 }
 .textview-custom{
+  padding-left: 10px;
   display: -webkit-box ;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -115,11 +117,14 @@
     width: 100%;
     position: absolute;
     bottom: 0;
-    top: 88rpx;
+     /* top: 88rpx;  */
     left: 0;
     right: 0;
     text-align: center;
-    padding-top: 203rpx;
+     /* padding-top: 203rpx;  */
+    /* height:200px; */
+    top: 0px;
+    height: 100%;
     background-color: #F2f2f2;
 }
 .no-order-img{
@@ -143,7 +148,7 @@
 }
 .order-list .a-order .order-date{
     padding: 0 30rpx;
-     height: 88rpx; 
+    height: 88rpx; 
     display: flex;
     justify-content: space-between;
     font-size:26rpx;

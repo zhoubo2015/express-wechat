@@ -59,7 +59,7 @@
 }
 .order-list .a-order{
     width: 100%;
-    background-color: #fff;
+    background-color: lightgray;
     margin-top: 20rpx;
 }
 .order-list .a-order .order-date{
@@ -152,4 +152,21 @@
 .a-order .price-box .topay-btn{
     border:1px solid #e64340;
     color: #e64340;
+}
+.text-custom{
+  display: block;
+  padding-left: 10px;
+}
+.text-custom-right{
+  display: block;
+  padding-right: 10px;
+}
+.tab-bottom{
+  display: flex;
+  flex-direction: row;
+  height: 48px;
+  width: 100%;
+  bottom: 5px;
+  position: absolute;
+  background-color: lightgray;
 }

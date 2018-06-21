@@ -3,16 +3,16 @@
   <scroll-view scroll-y style='height:{{scrollHeight}}px;'>
     <view class='order-detail-view'>
       <view>
-        <text class='text-custom'>Company:{{companyName}}</text>
-        <text class='text-custom'>Contact:{{contactName}}</text>
-        <text class='text-custom'>Number:{{phoneNumber}}</text>
-        <text class='textview-custom'>Address:{{companyAddress}}</text>
+        <text class='text-custom-blod'>供应商信息:{{companyName}}</text>
+        <text class='text-custom'>联系人:{{contactName}}</text>
+        <text class='text-custom'>联系方式:{{phoneNumber}}</text>
+        <text class='textview-custom'>{{companyAddress}}</text>
       </view>
       <view class='virtual-line'></view>
       <view>
           <view class="weui-cell weui-cell_input">
               <view class="weui-cell__hd">
-                  <view class="weui-label">order Count</view>
+                  <view class="weui-label">商品数量</view>
               </view>
               <view class="weui-cell__bd">
                   <input class="weui-input" bindinput='inputCountChange' placeholder="请输入"/>
@@ -20,7 +20,7 @@
           </view>
           <view class="weui-cell weui-cell_input">
               <view class="weui-cell__hd">
-                  <view class="weui-label">order Weight</view>
+                  <view class="weui-label">商品重量</view>
               </view>
               <view class="weui-cell__bd">
                   <input class="weui-input" bindinput='inputWeightChange' placeholder="请输入"/>
@@ -28,7 +28,7 @@
           </view>
           <view class="weui-cell weui-cell_input">
               <view class="weui-cell__hd">
-                  <view class="weui-label">order Money</view>
+                  <view class="weui-label">商品金额</view>
               </view>
               <view class="weui-cell__bd">
                   <input class="weui-input" bindinput='inputMoneyChange' placeholder="请输入"/>
@@ -71,6 +71,7 @@
         <view class="weui-cell__bd">添加备注</view>
       </navigator>
     </view>
+    <image src="http://192.168.127.100:8086/pic/download?imageName=wxb19e63c71aad9719.o6zAJs-b_DQK5T4C3B5VCOqcmREA.gRUWoWg3snIx824c2885da61d62e0b399ed2c98274c3.png"></image>
   </scroll-view>
 
   <modal class="modal" hidden="{{tipsHidden}}" title="添加备注" confirm-text="确认" bindconfirm="tipsConfirm" no-cancel="true">  
@@ -80,6 +81,6 @@
   </modal> 
 
   <view class='tab-bottom'>
-    <button id='' class="weui-btn" type="primary" plain="true" bindtap="addNewList">确定按钮</button>
+    <button id='' class="weui-btn" type="primary" plain="true" bindtap="addNewList">添加订单</button>
   </view>
 </view>

@@ -101,6 +101,8 @@ Page({
   onShow: function () {
     console.log("package onShow");
     // this.showDialog();
+    console.log(app.globalData.userInfo);
+    this.updatePackageList();
   },
 
   /**
@@ -159,60 +161,67 @@ Page({
   },
   updatePackageList: function() {
     var that = this;
-    wx.request({
-      url: 'http://192.168.127.100:8086/package/find',
-      data: {
-        userID: app.globalData.userInfo.userid,
-      },
-      success: function (res) {
-        console.log(res.data);
-        if (200 == res.data.statusCode) {
-          var list = res.data.data;
-          console.log("packageList: " + list);
-          for (var i = 0; i < list.length; i++) {
-            console.log(list[i]);
-            var unarrived = 0;
-            var modify = 0;
-            var arrived = 0;
-            var totalOrder = list[i].orderList.length;
-            var deadTime = list[i].orderList[0].deadlinedate;
-            var totalTips = list[i].orderList.length;
-            for (var j = 0; j < list[i].orderList.length; j++) {
-              if (deadTime < list[i].orderList[j].deadlinedate){
-                deadTime = list[i].orderList[j].deadlinedate;
+    if (undefined == app.globalData.userInfo) {
+      console.log("-------undefined");
+      // var testError = "naocanerror";
+    }
+    else {
+      console.log("-------null");
+      wx.request({
+        url: 'http://192.168.127.100:8086/package/find',
+        data: {
+          userID: app.globalData.userInfo.userid,
+        },
+        success: function (res) {
+          console.log(res.data);
+          if (200 == res.data.statusCode) {
+            var list = res.data.data;
+            console.log("packageList: " + list);
+            for (var i = 0; i < list.length; i++) {
+              console.log(list[i]);
+              var unarrived = 0;
+              var modify = 0;
+              var arrived = 0;
+              var totalOrder = list[i].orderList.length;
+              var deadTime = list[i].orderList[0].deadlinedate;
+              var totalTips = list[i].orderList.length;
+              for (var j = 0; j < list[i].orderList.length; j++) {
+                if (deadTime < list[i].orderList[j].deadlinedate) {
+                  deadTime = list[i].orderList[j].deadlinedate;
+                }
+                switch (list[i].orderList[j].orderstatus) {
+                  case 0: {
+                    unarrived = unarrived + 1;
+                  }
+                    break;
+                  case 1: {
+                    modify = modify + 1;
+                  }
+                    break;
+                  case 2: {
+                    arrived = arrived + 1;
+                  }
+                    break;
+                  default:
+                    break;
+                }
               }
-              switch (list[i].orderList[j].orderstatus){
-                case 0:{
-                  unarrived = unarrived + 1;
-                }
-                  break;
-                case 1:{
-                  modify = modify + 1;
-                }
-                  break;
-                case 2: {
-                  arrived = arrived + 1;
-                }
-                  break;
-                default:
-                  break;
-              }
+              list[i]['unarrived'] = unarrived;
+              list[i]['modify'] = modify;
+              list[i]['arrived'] = arrived;
+              list[i]['totalOrder'] = totalOrder;
+              list[i]['totalTips'] = totalTips;
+              list[i]['deadTime'] = deadTime;
             }
-            list[i]['unarrived'] = unarrived;
-            list[i]['modify'] = modify;
-            list[i]['arrived'] = arrived;
-            list[i]['totalOrder'] = totalOrder;
-            list[i]['totalTips'] = totalTips;
-            list[i]['deadTime'] = deadTime;
+            console.log("changed list:" + list);
+            that.data.packageList = list;
+            that.setData({
+              packageList: that.data.packageList
+            });
           }
-          console.log("changed list:" + list);
-          that.data.packageList = list;
-          that.setData({
-            packageList: that.data.packageList
-          });
         }
-      }
-    })
+      })
+    }
   },
   updateUserInfo: function(){
     var that = this;

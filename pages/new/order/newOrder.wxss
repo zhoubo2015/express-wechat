@@ -28,6 +28,11 @@
   display: block;
   padding-left: 10px;
 }
+text-custom-blod{
+  display: block;
+  padding-left: 10px;
+  font: bold;
+}
 .textview-custom{
   padding-left: 10px;
   display: -webkit-box ;

@@ -3,6 +3,7 @@
     "pages/package/package",
     "pages/package/package/packageDetail",
     "pages/package/order/orderDetail",
+    "pages/package/order/addOrder",
     "pages/new/new",
     "pages/new/order/newOrder",
     "pages/new/addCompany/newCompany",
