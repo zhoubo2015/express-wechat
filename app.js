@@ -1,3 +1,4 @@
+var util = require('common/util.js');
 App({
   //开发者可以添加任意的函数或数据到 Object 参数中，用 this 可以访问
   globalData: {
@@ -11,61 +12,64 @@ App({
     console.log("onLaunch");
     this.globalData.hasLogin = true
     var that = this;
-    wx.checkSession({
-      success: function () {
-        //session_key 未过期，并且在本生命周期一直有效
-        console.log("session_key 未过期，并且在本生命周期一直有效");
-        that.globalData.hasLogin = true;
-        that.globalData.openid = "oxiEr5Ox2L7goNZTKGY5IRGIl0sI";
-        // app.globalData.hasLogin = true
-        wx.getStorage({
-          key: 'localOpenID',
-          success: function (res) {
-            console.log(res.data);
-            var json = JSON.parse(res.data);
-            console.log(json['openid']);
-            that.globalData.openid = json['openid'];
-          }
-        });
-      },
-      fail: function () {
+    // wx.checkSession({
+    //   success: function () {
+    //     //session_key 未过期，并且在本生命周期一直有效
+    //     console.log("session_key 未过期，并且在本生命周期一直有效");
+    //     that.globalData.hasLogin = true;
+    //     // that.globalData.openid = "oxiEr5Ox2L7goNZTKGY5IRGIl0sI";
+    //     // app.globalData.hasLogin = true
+    //     wx.getStorage({
+    //       key: 'localOpenID',
+    //       success: function (res) {
+    //         console.log(res.data);
+    //         var json = JSON.parse(res.data);
+    //         console.log(json['openid']);
+    //         that.globalData.openid = json['openid'];
+    //       }
+    //     });
+    //   },
+    //   fail: function () {
         // session_key 已经失效，需要重新执行登录流程
         //重新登录
-        wx.login({
-          success: function (res) {
-            console.log("code:" + res.code);
-            if (res.code) {
-              //发起网络请求
-              wx.request({
-                url: 'http://192.168.127.100:8086/webChat/sessionKey',
-                data: {
-                  code: res.code
-                },
-                success: function (res) {
-                  console.log(res.data);
-                  if (200 == res.data.statusCode) {
-                    wx.setStorage({
-                      key: "localOpenID",
-                      data: res.data.data
-                    });
-                  }
-                  else {
-                    console.log("获取openid失败");
-                  }
-                }
-              })
-            } else {
-              console.log('登录失败！' + res.errMsg)
-            }
-            that.globalData.hasLogin = true
-            // that.setData({
-            //   hasLogin: true
-            // })
-            // that.update()
-          }
-        })
-      }
-    })
+        // wx.login({
+        //   success: function (res) {
+        //     console.log("code:" + res.code);
+        //     if (res.code) {
+        //       //发起网络请求
+        //       wx.request({
+        //         url: util.sessionurl(),
+        //         data: {
+        //           code: res.code
+        //         },
+        //         success: function (res) {
+        //           console.log(res.data);
+        //           var json = JSON.parse(res.data.data);
+        //           console.log(json['openid']);
+        //           that.globalData.openid = json['openid'];
+        //           if (200 == res.data.statusCode) {
+        //             wx.setStorage({
+        //               key: "localOpenID",
+        //               data: res.data.data
+        //             });
+        //           }
+        //           else {
+        //             console.log("获取openid失败");
+        //           }
+        //         }
+        //       })
+        //     } else {
+        //       console.log('登录失败！' + res.errMsg)
+        //     }
+        //     that.globalData.hasLogin = true
+        //     // that.setData({
+        //     //   hasLogin: true
+        //     // })
+        //     // that.update()
+        //   }
+        // })
+    //   }
+    // })
   },
   onShow: function (options) {
     // Do something when show.

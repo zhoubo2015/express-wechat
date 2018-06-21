@@ -1,6 +1,7 @@
 // pages/package/package.js
 var inputinfo = "";  
 var app = getApp();
+var utilcommon = require('../../common/util.js');
 Page({
 
   /**
@@ -22,25 +23,75 @@ Page({
   //https://user-images.githubusercontent.com/2777305/40645613-759aaef4-6359-11e8-8b20-eff82b0355b1.png
     // 查看是否授权
     var that = this;
-    wx.getSetting({
+    wx.login({
       success: function (res) {
-        if (res.authSetting['scope.userInfo']) {
-          // 已经授权，可以直接调用 getUserInfo 获取头像昵称
-          console.log("已经授权，可以直接调用 getUserInfo 获取头像昵称");
-          wx.getUserInfo({
+        console.log("success code:" + res.code);
+        wx.showToast({
+          title: 'success',
+        })
+      },
+      fail: function(res){
+        wx.showToast({
+          title: 'failed'
+        })
+      },
+      complete: function (res){
+        console.log("complete code:" + res.code);
+        // wx.showToast({
+        //   title: res.code,
+        // });
+        if (res.code) {
+          wx.showToast({
+            title: 'request',
+          });
+          //发起网络请求
+          wx.request({
+            url: utilcommon.sessionurl(),
+            data: {
+              code: res.code
+            },
             success: function (res) {
-              console.log("getUserInfo errMsg: " + res.errMsg)
-              app.globalData.userInfo = res.userInfo;
-              console.log(res.userInfo);
-              console.log("getUserInfo rawData: " + res.rawData);
-              that.updateUserInfo();
+              console.log(res.data);
+              if (200 == res.data.statusCode) {
+                var json = JSON.parse(res.data.data);
+                console.log(json['openid']);
+                app.globalData.openid = json['openid'];
+                wx.setStorage({
+                  key: "localOpenID",
+                  data: res.data.data
+                });
+                wx.getSetting({
+                  success: function (res) {
+                    if (res.authSetting['scope.userInfo']) {
+                      // 已经授权，可以直接调用 getUserInfo 获取头像昵称
+                      console.log("已经授权，可以直接调用 getUserInfo 获取头像昵称");
+                      wx.getUserInfo({
+                        success: function (res) {
+                          console.log("getUserInfo errMsg: " + res.errMsg)
+                          app.globalData.userInfo = res.userInfo;
+                          console.log(res.userInfo);
+                          console.log("getUserInfo rawData: " + res.rawData);
+                          that.updateUserInfo();
+                        }
+                      })
+                    }
+                    else {
+                      console.log("getUserInfo 未授权");
+                      that.showModal();
+                    }
+                  }
+                });
+              }
+              else {
+                console.log("获取openid失败");
+              }
             }
           })
         }
         else {
-          console.log("getUserInfo 未授权"); 
-          that.showModal();
+          console.log('登录失败！' + res.errMsg)
         }
+        app.globalData.hasLogin = true;
       }
     });
     // that.setData({
@@ -168,7 +219,7 @@ Page({
     else {
       console.log("-------null");
       wx.request({
-        url: 'http://192.168.127.100:8086/package/find',
+        url: utilcommon.packagefind(),
         data: {
           userID: app.globalData.userInfo.userid,
         },
@@ -225,9 +276,10 @@ Page({
   },
   updateUserInfo: function(){
     var that = this;
+    console.log("api :" + utilcommon.userfind());
     //查询是否存在
     wx.request({
-      url: 'http://192.168.127.100:8086/user/find',
+      url: utilcommon.userfind(),
       data: {
         openID: app.globalData.openid
       },
@@ -237,7 +289,7 @@ Page({
           if (40003 == res.data.data.code) {
             //不存在，则创建新用户
             wx.request({
-              url: 'http://192.168.127.100:8086/user/new',
+              url: utilcommon.usernew(),
               data: {
                 nickName: app.globalData.userInfo.nickName,
                 avatarUrl: app.globalData.userInfo.avatarUrl,
@@ -251,7 +303,7 @@ Page({
                   console.log("new user create! " + res.data.data.code);
                   //新建后，重新获取一次用户数据
                   wx.request({
-                    url: 'http://192.168.127.100:8086/user/find',
+                    url: utilcommon.userfind(),
                     data: {
                       openID: app.globalData.openid
                     },

@@ -1,5 +1,6 @@
 // pages/package/order/addOrder.js
-var app = getApp()
+var app = getApp();
+var util = require('../../../common/util.js');
 Page({
 
   /**
@@ -145,7 +146,7 @@ Page({
           that.bWaitingAddress = false;
           // debugger
           wx.request({
-            url: 'http://192.168.127.100:8086/user/update/recipient',
+            url: util.updaterecipient(),
             data: {
               userID: app.globalData.userInfo.userid,
               recipientName: app.globalData.userInfo.recipientname,
@@ -180,7 +181,7 @@ Page({
     console.log("currentType:" + that.data.currentType);
     if (0 == that.data.currentType) {
       wx.request({
-        url: 'http://192.168.127.100:8086/factory/find',
+        url: util.factoryfind(),
         data: {
 
         },
@@ -198,7 +199,7 @@ Page({
     }
     else {
       wx.request({
-        url: 'http://192.168.127.100:8086/factory/find',
+        url: util.factoryfind(),
         data: {
 
         },

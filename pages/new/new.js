@@ -1,5 +1,6 @@
 // pages/new/new.js
-var app = getApp()
+var app = getApp();
+var util = require('../../common/util.js');
 Page({
 
   /**
@@ -52,12 +53,12 @@ Page({
     var index = e.currentTarget.id;
     if (undefined != this.data.packageID) {
       wx.navigateTo({
-        url: 'order/newOrder?factoryID=' + this.factoryList[index].factoryid + '&factoryName=' + this.factoryList[index].factoryname + '&contactName=' + this.factoryList[index].contactname + '&contactAddress=' + this.factoryList[index].contactaddress + '&phoneNumber=' + this.factoryList[index].phonenumber + '&packageID=' + this.data.packageID
+        url: 'order/newOrder?factoryID=' + this.data.factoryList[index].factoryid + '&factoryName=' + this.data.factoryList[index].factoryname + '&contactName=' + this.data.factoryList[index].contactname + '&contactAddress=' + this.data.factoryList[index].contactaddress + '&phoneNumber=' + this.data.factoryList[index].phonenumber + '&packageID=' + this.data.packageID
       });
     }
     else {
       wx.navigateTo({
-        url: 'order/newOrder?factoryID=' + this.factoryList[index].factoryid + '&factoryName=' + this.factoryList[index].factoryname + '&contactName=' + this.factoryList[index].contactname + '&contactAddress=' + this.factoryList[index].contactaddress + '&phoneNumber=' + this.factoryList[index].phonenumber
+        url: 'order/newOrder?factoryID=' + this.data.factoryList[index].factoryid + '&factoryName=' + this.data.factoryList[index].factoryname + '&contactName=' + this.data.factoryList[index].contactname + '&contactAddress=' + this.data.factoryList[index].contactaddress + '&phoneNumber=' + this.data.factoryList[index].phonenumber
       });
     }
   },
@@ -145,7 +146,7 @@ Page({
           that.bWaitingAddress = false;
           // debugger
           wx.request({
-            url: 'http://192.168.127.100:8086/user/update/recipient',
+            url: util.updaterecipient(),
             data: {
               userID: app.globalData.userInfo.userid,
               recipientName: app.globalData.userInfo.recipientname,
@@ -180,16 +181,16 @@ Page({
     console.log("currentType:" + that.data.currentType);
     if (0 == that.data.currentType) {
       wx.request({
-        url: 'http://192.168.127.100:8086/factory/find',
+        url: util.factoryfind(),
         data: {
           
         },
         success: function (res) {
           console.log(res.data);
           if (200 == res.data.statusCode) {
-            that.factoryList = res.data.data;
+            that.data.factoryList = res.data.data;
             that.setData({
-              factoryList: that.factoryList
+              factoryList: that.data.factoryList
             });
           }
           console.log("/factory/find: " + res.data.statusCode);
@@ -198,16 +199,16 @@ Page({
     }
     else {
       wx.request({
-        url: 'http://192.168.127.100:8086/factory/find',
+        url: util.factoryfind(),
         data: {
 
         },
         success: function (res) {
           console.log(res.data);
           if (200 == res.data.statusCode) {
-            that.factoryList = res.data.data;
+            that.data.factoryList = res.data.data;
             that.setData({
-              factoryList: that.factoryList
+              factoryList: that.data.factoryList
             });
           }
           console.log("/factory/find: " + res.data.statusCode);

@@ -1,4 +1,5 @@
 // pages/package/order/orderDetail.js
+var util = require('../../../common/util.js');
 Page({
 
   /**
@@ -71,7 +72,7 @@ Page({
 
     var that = this;
     wx.request({
-      url: 'http://192.168.127.100:8086/order/findbyid',
+      url: util.orderfindbyid(),
       data: {
         orderID: that.data.orderID
       },

@@ -1,5 +1,6 @@
 // var wxpay = require('../../utils/pay.js')
-var app = getApp()
+var app = getApp();
+var util = require('../../../common/util.js');
 Page({
   data: {
     statusType: ["未入库", "已改期", "已入库", "总订单"],
@@ -138,7 +139,7 @@ Page({
     postData.status = that.data.currentType;
 
     wx.request({
-      url: 'http://192.168.127.100:8086/order/find',
+      url: util.orderfind(),
       data: {
         packageID: that.data.packageID
       },

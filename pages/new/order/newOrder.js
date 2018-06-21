@@ -1,5 +1,6 @@
 // pages/new/order/newOrder.js
 var app = getApp();
+var util = require('../../../common/util.js');
 Page({
 
   /**
@@ -81,7 +82,7 @@ Page({
         console.log(res);
         var tempFilePaths = res.tempFilePaths
         wx.uploadFile({
-          url: 'http://192.168.127.100:8086/pic/upload', //仅为示例，非真实的接口地址
+          url: util.picupload(), 
           filePath: tempFilePaths[0],
           name: 'file',
           formData: {
@@ -251,7 +252,7 @@ Page({
       var timeStamp = timeStampDate.getTime();
       console.log("timeStamp: " + timeStamp);
       wx.request({
-        url: 'http://192.168.127.100:8086/order/new',
+        url: util.ordernew(),
         data: {
           packageID: that.data.packageID,
           factoryID: that.data.factoryID,
@@ -275,7 +276,7 @@ Page({
     }
     else {
       wx.request({
-        url: 'http://192.168.127.100:8086/package/new',
+        url: util.packagenew(),
         data: {
           userID: app.globalData.userInfo.userid,
           storeID: "A01",
@@ -293,7 +294,7 @@ Page({
             console.log("timeStamp: " + timeStamp);
             var packageid = res.data.data.data.packageid;
             wx.request({
-              url: 'http://192.168.127.100:8086/order/new',
+              url: util.ordernew(),
               data: {
                 packageID: packageid,
                 factoryID: that.data.factoryID,
