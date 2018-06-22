@@ -21,10 +21,10 @@
             <text class='text-custom-right'>{{item.orderstatustext}}</text>
           </view>
           <view>
-            <text class='text-custom'>{{item.factoryInfo.contactaddress}}</text>
+            <text class='text-custom'>{{item.factoryInfo.factoryname}}({{item.factoryInfo.contactaddress}})</text>
             <text class='text-custom'>{{item.ordernumber}}</text>
-            <text class='text-custom'>{{item.ordermoney}}</text>
-            <text class='text-custom'>{{item.ordercount}}</text>
+            <text class='text-custom'>金额:{{item.ordermoney}}</text>
+            <text class='text-custom'>数量:{{item.ordercount}}</text>
           </view>
           <view>
             <text class='text-custom-right'>{{item.createdate}}</text>

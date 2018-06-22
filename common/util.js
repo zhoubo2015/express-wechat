@@ -1,4 +1,4 @@
-var domain = "http://192.168.2.9:8086";
+var domain = "http://192.168.127.100:8086";
 function sessionurl() {
   return domain + "/webChat/sessionKey";
 }  
