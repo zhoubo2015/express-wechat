@@ -16,7 +16,8 @@ Page({
     tabClass: ["什么", "测试"],
     bWaitingAddress: false,
     factoryList: undefined,
-    packageID: undefined
+    packageID: undefined,
+    resultList: undefined
   },
   showInput: function () {
     this.setData({
@@ -26,19 +27,55 @@ Page({
   hideInput: function () {
     this.setData({
       inputVal: "",
-      inputShowed: false
+      inputShowed: false,
+      resultList: ""
     });
   },
   clearInput: function () {
     this.setData({
-      inputVal: ""
+      inputVal: "",
+      resultList: ""
     });
   },
   inputTyping: function (e) {
-    this.setData({
-      inputVal: e.detail.value
-    });
     console.log("input: " + e.detail.value);
+    var inputStr = e.detail.value;
+    var that = this;
+    // debugger
+    if (inputStr.length > 0) {
+      wx.request({
+        url: util.factorysearch(),
+        data: {
+          factoryName: inputStr
+        },
+        success: function (res) {
+          console.log(res.data);
+          if (200 == res.data.statusCode) {
+            that.setData({
+              inputVal: e.detail.value,
+              resultList: res.data.data.data
+            });
+          }
+          console.log("factory/search: " + res.data.statusCode);
+        }
+      });
+    }
+    else {
+      wx.request({
+        url: util.factorysearch(),
+        success: function (res) {
+          console.log(res.data);
+          if (200 == res.data.statusCode) {
+            // debugger
+            that.setData({
+              inputVal: e.detail.value,
+              resultList: res.data.data.data
+            });
+          }
+          console.log("factory/search: " + res.data.statusCode);
+        }
+      });
+    }
   },
   statusTap: function (e) {
     var curType = e.currentTarget.dataset.index;
@@ -47,6 +84,10 @@ Page({
       currentType: curType
     });
     this.onShow();
+  },
+  searchResultTap: function (e){
+    console.log("searchResultTap:" + e.currentTarget.id);
+    var index = e.currentTarget.id;
   },
   newOrderTap: function (e){
     console.log("newOrderTap:" + e.currentTarget.id);

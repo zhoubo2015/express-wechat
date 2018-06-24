@@ -1,4 +1,4 @@
-var domain = "http://192.168.127.100:8086";
+var domain = "http://192.168.2.9:8086";
 function sessionurl() {
   return domain + "/webChat/sessionKey";
 }  
@@ -8,6 +8,9 @@ function updaterecipient() {
 // var factoryfind = domain + "/factory/find";
 function factoryfind() {
   return domain + "/factory/find";
+}
+function factorysearch() {
+  return domain + "/factory/search";
 }
 // var picupload = domain + "/pic/upload";
 function picupload() {
@@ -46,6 +49,7 @@ module.exports = {
   sessionurl: sessionurl,
   updaterecipient: updaterecipient,
   factoryfind: factoryfind,
+  factorysearch: factorysearch,
   picupload: picupload,
   ordernew: ordernew,
   packagenew: packagenew,
