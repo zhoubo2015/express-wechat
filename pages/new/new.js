@@ -169,7 +169,7 @@ Page({
   onShow: function () {
     console.log("onShow");
     var that = this;
-    if (undefined == app.globalData.userInfo.rphonenumber && false == this.bWaitingAddress) {
+    if ((undefined == app.globalData.userInfo.rphonenumber || "" == app.globalData.userInfo.rphonenumber) && false == this.bWaitingAddress) {
       this.bWaitingAddress = true;
       wx.chooseAddress({
         success: function (res) {

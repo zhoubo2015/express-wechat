@@ -71,7 +71,6 @@
         <view class="weui-cell__bd">添加备注</view>
       </navigator>
     </view>
-    <image src="http://192.168.127.100:8086/pic/download?imageName=wxb19e63c71aad9719.o6zAJs-b_DQK5T4C3B5VCOqcmREA.gRUWoWg3snIx824c2885da61d62e0b399ed2c98274c3.png"></image>
   </scroll-view>
 
   <modal class="modal" hidden="{{tipsHidden}}" title="添加备注" confirm-text="确认" bindconfirm="tipsConfirm" no-cancel="true">  

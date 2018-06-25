@@ -1,4 +1,4 @@
-var domain = "http://192.168.2.9:8086";
+var domain = "http://www.langrun.club/express-0.0.1-SNAPSHOT";
 function sessionurl() {
   return domain + "/webChat/sessionKey";
 }  
@@ -8,9 +8,6 @@ function updaterecipient() {
 // var factoryfind = domain + "/factory/find";
 function factoryfind() {
   return domain + "/factory/find";
-}
-function factorysearch() {
-  return domain + "/factory/search";
 }
 // var picupload = domain + "/pic/upload";
 function picupload() {
@@ -27,6 +24,9 @@ function packagenew() {
 // var orderfindbyid = domain + "/order/findbyid";
 function orderfindbyid() {
   return domain + "/order/findbyid";
+}
+function factorysearch() {
+  return domain + "/factory/search";
 }
 // var packagefind = domain + "/package/find";
 function packagefind() {
