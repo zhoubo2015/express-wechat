@@ -363,7 +363,8 @@ Page({
         }
         console.log("/user/find: " + res.data.statusCode);
       },
-      fail: function () {
+      fail: function (res) {
+        console.log(res + res.errMsg);
         console.log("/user/find: api failed");
       }
     });
