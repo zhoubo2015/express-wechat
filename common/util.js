@@ -1,4 +1,4 @@
-var domain = "http://www.langrun.club/express-0.0.1-SNAPSHOT";
+var domain = "https://www.langrun.club/express-0.0.1-SNAPSHOT";
 function sessionurl() {
   return domain + "/webChat/sessionKey";
 }  
