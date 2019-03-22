@@ -302,6 +302,8 @@ Page({
     })
   },
   updateUserInfo: function () {
+
+
     var that = this;
     console.log("api :" + util.userfind());
     //查询是否存在
@@ -368,6 +370,8 @@ Page({
         console.log("/user/find: api failed");
       }
     });
+
+    
   },
   updatePackageList: function() {
     var that = this;

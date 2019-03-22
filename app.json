@@ -10,10 +10,10 @@
     "pages/setting/setting"
   ],
   "window": {
-    "backgroundTextStyle": "red",
+    "backgroundTextStyle": "dark",
     "navigationBarBackgroundColor": "#2D76EC",
     "navigationBarTitleText": "Express",
-    "navigationBarTextStyle": "#fff"
+    "navigationBarTextStyle":"black"
   },
   "tabBar": {
     "selectedColor": "#1296db",
