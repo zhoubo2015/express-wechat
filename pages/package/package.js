@@ -39,8 +39,8 @@ Page({
           success: function (res) {
             console.log("getStorage" + res.data);
             var json = JSON.parse(res.data);
-            console.log(json['openid']);
-            app.globalData.openid = json['openid'];
+            console.log(json['openIDKey']);
+            app.globalData.openid = json['openIDKey'];
             wx.getSetting({
               success: function (res) {
                 if (res.authSetting['scope.userInfo']) {
@@ -232,14 +232,14 @@ Page({
               code: res.code
             },
             success: function (res) {
-              console.log("从自己服务器获取openid: " + res.data);
-              var json = JSON.parse(res.data.data);
-              console.log(json['openid']);
-              app.globalData.openid = json['openid'];
+              console.log("从自己服务器获取openid: " + res.data.data.data);
+              var json = JSON.parse(res.data.data.data);
+              console.log(json['openIDKey']);
+              app.globalData.openid = json['openIDKey'];
               if (200 == res.data.statusCode) {
                 wx.setStorage({
                   key: "localOpenID",
-                  data: res.data.data,
+                  data: res.data.data.data,
                   success: function (res){
                     // wx.showToast({
                     //   title: 'Storage',

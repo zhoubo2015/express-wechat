@@ -189,8 +189,8 @@ App({
           success: function (res) {
             console.log("getStorage" + res.data);
             var json = JSON.parse(res.data);
-            console.log(json['openid']);
-            that.globalData.openid = json['openid'];
+            console.log(json['openIDKey']);
+            that.globalData.openid = json['openIDKey'];
             return resolve('app.js login success')
           },
           fail: function () {
