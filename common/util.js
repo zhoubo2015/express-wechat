@@ -20,7 +20,7 @@ function picupload() {
 }
 // var ordernew = domain + "/order/newt";
 function ordernew() {
-  return domain + "/order/new";
+  return domain + "/webChat/newOrder";
 }
 // var packagenew = domain + "/package/new";
 function packagenew() {
@@ -42,11 +42,17 @@ function orderfind(){
 }
 // var userfind = domain + "/user/find";
 function userfind() {
-  return domain + "/user/find";
+  return domain + "/webChat/findUser";
 }
 // var usernew = domain + "/user/new";
 function usernew() {
   return domain + "/user/new";
+} 
+function updateUser() {
+  return domain + "/webChat/updateUser";
+}
+function orderList() {
+  return domain + "/webChat/orderList";
 }
 
 module.exports = {
@@ -63,5 +69,7 @@ module.exports = {
   orderfindbyid: orderfindbyid,
   packagefind: packagefind,
   userfind: userfind,
-  usernew: usernew
+  usernew: usernew,
+  updateUser: updateUser,
+  orderList: orderList
 }

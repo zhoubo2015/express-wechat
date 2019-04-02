@@ -74,10 +74,10 @@ App({
               code: res.code
             },
             success: function (res) {
-              console.log("从自己服务器获取openid: " + res.data);
-              var json = JSON.parse(res.data.data);
-              console.log(json['openid']);
-              that.globalData.openid = json['openid'];
+              console.log("从自己服务器获取openid: " + res.data.data);
+              var json = JSON.parse(res.data.data.data);
+              console.log(json['openIDKey']);
+              that.globalData.openid = json['openIDKey'];
               if (200 == res.data.statusCode) {
                 wx.setStorage({
                   key: "localOpenID",
@@ -119,10 +119,10 @@ App({
                 code: res.code
               },
               success(res) {
-                console.log("从自己服务器获取openid: " + res.data);
-                var json = JSON.parse(res.data.data);
-                console.log(json['openid']);
-                that.globalData.openid = json['openid'];
+                console.log("从自己服务器获取openid: " + res.data.data);
+                var json = JSON.parse(res.data.data.data);
+                console.log(json['openIDKey']);
+                that.globalData.openid = json['openIDKey'];
                 if (200 == res.data.statusCode) {
                   wx.setStorage({
                     key: "localOpenID",

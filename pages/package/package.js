@@ -232,7 +232,7 @@ Page({
               code: res.code
             },
             success: function (res) {
-              console.log("从自己服务器获取openid: " + res.data.data.data);
+              console.log("从自己服务器获取openid: " + res.data.data);
               var json = JSON.parse(res.data.data.data);
               console.log(json['openIDKey']);
               app.globalData.openid = json['openIDKey'];
@@ -310,12 +310,12 @@ Page({
     wx.request({
       url: util.userfind(),
       data: {
-        openID: app.globalData.openid
+        tokenKey: app.globalData.openid
       },
       success: function (res) {
         console.log(res.data);
         if (200 == res.data.statusCode) {
-          if (40003 == res.data.data.code) {
+          if (40003 == res.data.data.retCode) {
             //不存在，则创建新用户
             wx.request({
               url: util.usernew(),
@@ -352,12 +352,55 @@ Page({
               }
             });
           }
+          else if (30000 == res.data.data.retCode) {
+            //key超时
+            that.login();
+          }
           else {
             //存在用户
             var test = (res.data.data.data[0]);
-            // debugger
-            app.globalData.userInfo = res.data.data.data[0];
-            that.updatePackageList();
+            if (0 == test.avatarurl.length) {
+              //need uodate user info
+              wx.request({
+                url: util.updateUser(),
+                data: {
+                  nickName: app.globalData.userInfo.nickName,
+                  avatarUrl: app.globalData.userInfo.avatarUrl,
+                  phoneNumber: "000",
+                  gender: app.globalData.userInfo.gender,
+                  tokenKey: app.globalData.openid
+                },
+                success: function (res) {
+                  console.log(res.data);
+                  if (200 == res.data.statusCode) {
+                    console.log("user update! " + res.data.data.retCode);
+                    //更新后，重新获取一次用户数据
+                    wx.request({
+                      url: util.userfind(),
+                      data: {
+                        tokenKey: app.globalData.openid
+                      },
+                      success: function (res) {
+                        console.log(res.data);
+                        if (200 == res.data.statusCode) {
+                          if (40003 != res.data.data.retCode) {
+                            app.globalData.userInfo = res.data.data.data[0];
+                            that.updatePackageList();
+                          }
+                        }
+                        console.log("/user/new: " + res.data.statusCode);
+                      }
+                    });
+                  }
+                  console.log("/user/new: " + res.data.statusCode);
+                }
+              });
+            }
+            else {
+              // debugger
+              app.globalData.userInfo = res.data.data.data[0];
+              that.updatePackageList();
+            }
           }
         }
         if (200 == res.data.statusCode) {
