@@ -1,5 +1,6 @@
 {
   "pages": [
+    "pages/package/orderList",
     "pages/package/package",
     "pages/package/package/packageDetail",
     "pages/package/order/orderDetail",
@@ -19,7 +20,7 @@
     "selectedColor": "#1296db",
     "list": [
       {
-        "pagePath": "pages/package/package",
+        "pagePath": "pages/package/orderList",
         "text": "首页",
         "iconPath": "images/new/new.png",
         "selectedIconPath": "images/new/new_selected.png"

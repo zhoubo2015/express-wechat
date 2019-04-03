@@ -28,10 +28,10 @@ function packagenew() {
 }
 // var orderfindbyid = domain + "/order/findbyid";
 function orderfindbyid() {
-  return domain + "/order/findbyid";
+    return domain + "/webChat/findOrder";
 }
 function factorysearch() {
-  return domain + "/factory/search";
+    return domain + "/webChat/findFactory";
 }
 // var packagefind = domain + "/package/find";
 function packagefind() {

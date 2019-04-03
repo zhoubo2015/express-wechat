@@ -181,14 +181,14 @@ Page({
     console.log("currentType:" + that.data.currentType);
     if (0 == that.data.currentType) {
       wx.request({
-        url: util.factoryfind(),
+          url: util.factorysearch(),
         data: {
-
+            tokenKey: app.globalData.openid
         },
         success: function (res) {
           console.log(res.data);
           if (200 == res.data.statusCode) {
-            that.factoryList = res.data.data;
+            that.factoryList = res.data.data.data;
             that.setData({
               factoryList: that.factoryList
             });
@@ -199,14 +199,14 @@ Page({
     }
     else {
       wx.request({
-        url: util.factoryfind(),
+          url: util.factorysearch(),
         data: {
-
+            tokenKey: app.globalData.openid
         },
         success: function (res) {
           console.log(res.data);
           if (200 == res.data.statusCode) {
-            that.factoryList = res.data.data;
+            that.factoryList = res.data.data.data;
             that.setData({
               factoryList: that.factoryList
             });

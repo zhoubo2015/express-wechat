@@ -1,0 +1,63 @@
+<view class="commodity_screen" bindtap="hideModal" wx:if="{{showModalStatus}}"></view>
+<view animation="{{animationData}}" class="commodity_attr_box" wx:if="{{showModalStatus}}">
+    <!--对话框标题-->
+    <view class="dialog-title">
+        登录提示
+    </view>
+    <view class="line-top"></view>
+    <view class="dialog-content">
+        小程序需要您的授权才能提供更好的服务哦
+    </view>
+    <!--对话框按钮-->
+    <view class="line-top"></view>
+    <view class="btn-view">
+        <button class='dialog-btn' open-type="getUserInfo" bindgetuserinfo='bindGetUserInfo' catchtap='confirmEvent'>知道了</button>
+    </view>
+</view>
+<view class="whole-page">
+    <!-- <dialog id='dialog' 
+      title='登录提示' 
+      content='小程序需要您的授权才能提供更好的服务哦' 
+      confirmText='知道了'
+      bind:componentConfirmEvent='myConfirmEvent'
+      bind:componentBindGetUserInfo='myBindGetUserInfo'>
+  </dialog> -->
+    <view>
+        <text class='text-center'>配货中心客户端</text>
+    </view>
+    <view class="weui-cells__title">订单列表</view>
+    <view class='package-list-end'>
+        <view class="weui-cells weui-cells_after-title">
+            <checkbox-group bindchange="checkboxChange">
+                <label class="weui-cell weui-check__label" wx:for="{{orderList}}">
+                    <checkbox class="weui-check" value="{{item.value}}" checked="{{item.checked}}" />
+
+                    <view class="weui-cell__hd weui-check__hd_in-checkbox" wx:if="{{item.display}}">
+                        <icon class="weui-icon-checkbox_circle" type="circle" size="23" wx:if="{{!item.checked}}"></icon>
+                        <icon class="weui-icon-checkbox_success" type="success" size="23" wx:if="{{item.checked}}"></icon>
+                    </view>
+                    <view class="weui-cell__bd">
+                        <view id='{{item.orderid}}' bindtap='orderDetail'>
+                            <view>
+                                <text class='text-custom-right'>{{item.orderstatustext}}</text>
+                            </view>
+                            <view>
+                                <text class='text-custom'>{{item.factoryInfo.factoryname}}({{item.factoryInfo.contactaddress}})</text>
+                                <text class='text-custom'>{{item.ordernumber}}</text>
+                                <text class='text-custom'>金额:{{item.ordermoney}}</text>
+                                <text class='text-custom'>数量:{{item.ordercount}}</text>
+                            </view>
+                            <view>
+                                <text class='text-custom-right'>{{item.createDataStr}}</text>
+                            </view>
+                        </view>
+                    </view>
+                </label>
+            </checkbox-group>
+        </view>
+        <view class='tab-bottom'>
+            <button id='' class="weui-btn" type="primary" plain="true" style='width:40%;' bindtap="addNewOrder">{{addBtnTitle}}</button>
+            <button id='' class="weui-btn" type="primary" plain="true" style='width:40%;' bindtap="baleOrder">{{baleBtnTitle}}</button>
+        </view>
+    </view>
+</view>
