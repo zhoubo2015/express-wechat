@@ -16,7 +16,8 @@ Page({
         address: "",
         balePackageStatus: false,
         baleBtnTitle: "打包发货",
-        addBtnTitle: "添加订单"
+        addBtnTitle: "添加订单",
+        storeNumber: ""
     },
 
     /**
@@ -448,7 +449,25 @@ Page({
                         });
                     }
                 }
-            })
+            });
+            wx.request({
+                url: util.findStore(),
+                data: {
+                    tokenKey: app.globalData.openid
+                },
+                success: function (res) {
+                    console.log(res.data);
+                    if (200 == res.data.statusCode) {
+                        var storeTable = res.data.data.data;
+                        console.log("storeTable: " + storeTable);
+                        
+                        var storeNumber = storeTable.storenumber;
+                        that.setData({
+                            storeNumber: storeNumber
+                        });
+                    }
+                }
+            });
         }
     },
     showModal: function() {
@@ -510,7 +529,7 @@ Page({
         console.log(e);
         inputinfo = e.detail.value;
     },
-    checkboxChange: function (e) {
+    checkboxChange: function(e) {
         console.log('checkbox发生change事件，携带value值为：', e.detail.value);
         var items = this.data.orderList;
         var values = e.detail.value;
@@ -532,18 +551,17 @@ Page({
             orderList: items
         });
     },
-    addNewOrder: function (e) {
+    addNewOrder: function(e) {
         console.log("addNewOrder: " + this.data.balePackageStatus);
         if (this.data.balePackageStatus) {
             console.log("bale package");
-        }
-        else {
+        } else {
             wx.navigateTo({
                 url: "/pages/package/order/addOrder?packageID=" + this.data.packageID
             });
         }
     },
-    baleOrder: function (e) {
+    baleOrder: function(e) {
         console.log("changeOrder");
 
         this.data.balePackageStatus = !this.data.balePackageStatus;
@@ -552,8 +570,7 @@ Page({
         if (this.data.balePackageStatus) {
             baleBtnTitle = "取消打包";
             addBtnTitle = "确认打包";
-        }
-        else {
+        } else {
             baleBtnTitle = "打包发货";
             addBtnTitle = "添加订单";
         }
@@ -569,7 +586,7 @@ Page({
             addBtnTitle: addBtnTitle
         });
     },
-    orderDetail: function (e) {
+    orderDetail: function(e) {
         var orderId = e.currentTarget.id;
         if (true == this.data.balePackageStatus) {
             return;

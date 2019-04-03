@@ -26,6 +26,9 @@
         <text class='text-center'>配货中心客户端</text>
     </view>
     <view class="weui-cells__title">订单列表</view>
+    <view>
+        <text class='text-center'>{{storeNumber}}</text>
+    </view>
     <view class='package-list-end'>
         <view class="weui-cells weui-cells_after-title">
             <checkbox-group bindchange="checkboxChange">
