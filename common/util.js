@@ -66,6 +66,10 @@ function findStore() {
     return domain + "/webChat/findStore";
 }
 
+function balePackage() {
+    return domain + "/webChat/balePackage";
+}
+
 module.exports = {
     getRequestUrl: "http://localhost:59637", //获得接口地址
     sessionurl: sessionurl,
@@ -83,5 +87,6 @@ module.exports = {
     usernew: usernew,
     updateUser: updateUser,
     orderList: orderList,
-    findStore: findStore
+    findStore: findStore,
+    balePackage: balePackage
 }

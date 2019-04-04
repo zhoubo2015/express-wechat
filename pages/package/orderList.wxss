@@ -229,3 +229,34 @@ page{
 .weui-btn {
   margin-top: 0px;
 }
+.status-box{
+    width:100%;
+    height: 88rpx;
+    line-height: 88rpx;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #fff;
+}
+.status-box .status-label{
+    width: 150rpx;
+    height: 100%;
+    text-align: center;
+    font-size:28rpx;
+    color:#353535;
+    box-sizing: border-box;
+    position: relative;
+}
+.status-box .status-label.active{
+    color:#e64340;
+    border-bottom: 6rpx solid #e64340;
+}
+.status-box .status-label .red-dot{
+    width: 16rpx;
+    height: 16rpx;
+    position: absolute;
+    left: 116rpx;
+    top:23rpx;
+    background-color: #f43530;
+    border-radius: 50%;
+}

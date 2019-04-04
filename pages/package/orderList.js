@@ -17,7 +17,10 @@ Page({
         balePackageStatus: false,
         baleBtnTitle: "打包发货",
         addBtnTitle: "添加订单",
-        storeNumber: ""
+        storeNumber: "",
+        statusType: ["未入库", "已入库", "总订单"],
+        currentType: 2,
+        baleOrderNumbers: ""
     },
 
     /**
@@ -165,6 +168,7 @@ Page({
         // this.showDialog();
         console.log(app.globalData.userInfo);
         this.updateOrderList();
+        this.updateStoreNumber();
     },
 
     /**
@@ -342,6 +346,7 @@ Page({
                                                 if (40003 != res.data.data.code) {
                                                     app.globalData.userInfo = res.data.data.data[0];
                                                     that.updateOrderList();
+                                                    that.updateStoreNumber();
                                                 }
                                             }
                                             console.log("/user/new: " + res.data.statusCode);
@@ -384,6 +389,7 @@ Page({
                                                     if (40003 != res.data.data.retCode) {
                                                         app.globalData.userInfo = res.data.data.data[0];
                                                         that.updateOrderList();
+                                                        that.updateStoreNumber();
                                                     }
                                                 }
                                                 console.log("/user/new: " + res.data.statusCode);
@@ -397,6 +403,7 @@ Page({
                             // debugger
                             app.globalData.userInfo = res.data.data.data[0];
                             that.updateOrderList();
+                            that.updateStoreNumber();
                         }
                     }
                 }
@@ -412,6 +419,64 @@ Page({
         });
 
 
+    },
+    baleOrderRequest: function() {
+        var that = this;
+        console.log("baleOrderRequest:" + this.data.baleOrderNumbers);
+        wx.request({
+            url: util.balePackage(),
+            data: {
+                tokenKey: app.globalData.openid,
+                orderNumbers: that.data.baleOrderNumbers
+            },
+            success: function(res) {
+                console.log(res.data);
+                if (200 == res.data.statusCode) {
+                    if (0 == res.data.data.retCode) {
+                        var packageData = res.data.data.data;
+                        console.log("package: " + packageData);
+
+                        that.data.balePackageStatus = !that.data.balePackageStatus;
+                        that.setData({
+                            baleOrderNumbers: "",
+                            baleBtnTitle: "打包发货",
+                            addBtnTitle: "添加订单"
+                        });
+
+                        wx.showToast({
+                            title: '打包成功!',
+                        });
+
+                        that.updateOrderList();
+                    } else {
+
+                    }
+                }
+            }
+        });
+    },
+    updateStoreNumber: function() {
+        var that = this;
+        wx.request({
+            url: util.findStore(),
+            data: {
+                tokenKey: app.globalData.openid
+            },
+            success: function(res) {
+                console.log(res.data);
+                if (200 == res.data.statusCode) {
+                    if (0 == res.data.data.retCode) {
+                        var storeTable = res.data.data.data;
+                        console.log("storeTable: " + storeTable);
+
+                        var storeNumber = storeTable.storenumber;
+                        that.setData({
+                            storeNumber: storeNumber
+                        });
+                    }
+                }
+            }
+        });
     },
     updateOrderList: function() {
         var that = this;
@@ -430,6 +495,8 @@ Page({
                     if (200 == res.data.statusCode) {
                         var totalOrder = res.data.data.data;
                         console.log("orderList: " + totalOrder);
+                        var unarrived = [];
+                        var arrived = [];
                         for (var i = 0; i < totalOrder.length; i++) {
                             console.log(totalOrder[i]);
                             totalOrder[i]['checked'] = '';
@@ -437,34 +504,40 @@ Page({
                             totalOrder[i]['display'] = '';
                             if (0 == totalOrder[i].orderstatus) {
                                 totalOrder[i]['orderstatustext'] = "等待厂家配货";
+                                var orderUnarrived = totalOrder[i];
+                                unarrived.splice(0, 0, orderUnarrived);
                             } else if (1 == totalOrder[i].orderstatus) {
-                                totalOrder[i]['orderstatustext'] = "该订单已改期";
-                            } else if (2 == totalOrder[i].orderstatus) {
                                 totalOrder[i]['orderstatustext'] = "配货中心已入库";
+                                var orderArrived = totalOrder[i];
+                                arrived.splice(0, 0, orderArrived);
                             }
                         }
                         that.data.orderList = totalOrder;
-                        that.setData({
-                            orderList: that.data.orderList
-                        });
-                    }
-                }
-            });
-            wx.request({
-                url: util.findStore(),
-                data: {
-                    tokenKey: app.globalData.openid
-                },
-                success: function (res) {
-                    console.log(res.data);
-                    if (200 == res.data.statusCode) {
-                        var storeTable = res.data.data.data;
-                        console.log("storeTable: " + storeTable);
-                        
-                        var storeNumber = storeTable.storenumber;
-                        that.setData({
-                            storeNumber: storeNumber
-                        });
+                        switch (that.data.currentType) {
+                            case (0):
+                                {
+                                    that.setData({
+                                        orderList: unarrived
+                                    });
+                                }
+                                break;
+                            case (1):
+                                {
+                                    that.setData({
+                                        orderList: arrived
+                                    });
+                                }
+                                break;
+                            case (2):
+                                {
+                                    that.setData({
+                                        orderList: that.data.orderList
+                                    });
+                                }
+                                break;
+                            default:
+                                break;
+                        }
                     }
                 }
             });
@@ -536,6 +609,7 @@ Page({
         if (false == this.data.balePackageStatus) {
             return;
         }
+        this.data.baleOrderNumbers = values.toString();
         for (var i = 0, lenI = items.length; i < lenI; ++i) {
             items[i].checked = false;
 
@@ -554,7 +628,8 @@ Page({
     addNewOrder: function(e) {
         console.log("addNewOrder: " + this.data.balePackageStatus);
         if (this.data.balePackageStatus) {
-            console.log("bale package");
+            console.log("bale package:" + this.data.baleOrderNumbers);
+            this.baleOrderRequest();
         } else {
             wx.navigateTo({
                 url: "/pages/package/order/addOrder?packageID=" + this.data.packageID
@@ -567,12 +642,15 @@ Page({
         this.data.balePackageStatus = !this.data.balePackageStatus;
         var baleBtnTitle = "";
         var addBtnTitle = "";
+        var baleOrderNumbers = this.data.baleOrderNumbers;
         if (this.data.balePackageStatus) {
             baleBtnTitle = "取消打包";
             addBtnTitle = "确认打包";
         } else {
             baleBtnTitle = "打包发货";
             addBtnTitle = "添加订单";
+            // baleOrderNumbers = "";
+            this.data.baleOrderNumbers = "";
         }
 
         var items = this.data.orderList;
@@ -595,5 +673,13 @@ Page({
         wx.navigateTo({
             url: "/pages/package/order/orderDetail?orderID=" + orderId
         })
+    },
+    statusTap: function(e) {
+        var curType = e.currentTarget.dataset.index;
+        this.data.currentType = curType
+        this.setData({
+            currentType: curType
+        });
+        this.updateOrderList();
     },
 })
