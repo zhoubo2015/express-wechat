@@ -33,13 +33,17 @@
               <view class="weui-cell__ft">{{orderCount}}</view>
           </view>
           <view class="weui-cell">
+              <view class="weui-cell__bd weui-cell__bd-color">核点数量</view>
+              <view class="weui-cell__ft">{{confirmordercount}}</view>
+          </view>
+          <view class="weui-cell">
               <view class="weui-cell__bd weui-cell__bd-color">商品重量</view>
               <view class="weui-cell__ft">{{orderWeight}}</view>
           </view>
-          <view class="weui-cell">
+          <!-- <view class="weui-cell">
               <view class="weui-cell__bd weui-cell__bd-color">商品金额</view>
               <view class="weui-cell__ft">${{orderMoney}}</view>
-          </view>
+          </view> -->
       </view>
       <view class='virtual-line'></view> 
       <!-- <view>
@@ -88,9 +92,9 @@
     </view>
   </scroll-view>
 
-  <view class='tab-bottom'>
+  <!-- <view class='tab-bottom'>
     <button id='' class="weui-btn" type="primary" plain="true" bindtap="addNewList">按钮</button>
     <button id='' class="weui-btn" type="primary" plain="true" bindtap="closePackage">按钮按钮</button>
     <button id='' class="weui-btn" type="primary" plain="true" bindtap="closePackage">按钮按钮1</button>
-  </view>
+  </view> -->
 </view>

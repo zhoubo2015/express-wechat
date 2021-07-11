@@ -1,0 +1,22 @@
+<!--pages/new/packageList.wxml-->
+<view class="table">
+ <!-- <view class="tr bg-w section-header"> -->
+<view class='{{fixed ? "section-header section-fixed tr bg-w": "section-header tr bg-w"}}'>
+    <view class="th">时间</view>
+    <view  class="th">包裹号</view>
+    <view  class="th ">订单数</view>
+ </view>
+ <view hidden='{{!fixed}}' class="section-header section-placeholder"></view> 
+    <block wx:for="{{listData}}" wx:key="{{index}}">
+        <view bindtap="didSelectedTap" data-index="{{index}}" class="tr bg-g" wx:if="{{index % 2 == 0}}">
+            <view class="td">{{item.createDataStr}}</view>
+            <view class="td">{{item.packagenumber}}</view>
+            <view class="td">{{item.totalOrderNumber}}</view>
+        </view>
+        <view bindtap="didSelectedTap"  data-index="{{index}}" class="tr" wx:else>
+            <view class="td">{{item.createDataStr}}</view>
+            <view class="td">{{item.packagenumber}}</view>
+            <view class="td">{{item.totalOrderNumber}}</view>
+        </view>
+    </block>
+</view>

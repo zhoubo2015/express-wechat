@@ -18,9 +18,11 @@ Page({
         baleBtnTitle: "打包发货",
         addBtnTitle: "添加订单",
         storeNumber: "",
-        statusType: ["未入库", "已入库", "总订单"],
-        currentType: 2,
-        baleOrderNumbers: ""
+        statusType: ["未入仓", "已入仓", "已入库", "总订单"],
+        currentType: 3,
+        baleOrderNumbers: "",
+        orderListCallback: undefined,
+        checkStatus: false,
     },
 
     /**
@@ -29,7 +31,7 @@ Page({
     onLoad: function(options) {
         //https://user-images.githubusercontent.com/2777305/40645613-759aaef4-6359-11e8-8b20-eff82b0355b1.png
         // 查看是否授权
-        console.log("package.js onLoad");
+        console.log("orderList.js onLoad");
         var that = this;
         wx.showLoading({
             title: '登录中...',
@@ -48,28 +50,30 @@ Page({
                         var json = JSON.parse(res.data);
                         console.log(json['openIDKey']);
                         app.globalData.openid = json['openIDKey'];
-                        wx.getSetting({
-                            success: function(res) {
-                                if (res.authSetting['scope.userInfo']) {
-                                    // 已经授权，可以直接调用 getUserInfo 获取头像昵称
-                                    console.log("已经授权，可以直接调用 getUserInfo 获取头像昵称");
-                                    wx.getUserInfo({
-                                        success: function(res) {
-                                            console.log("getUserInfo errMsg: " + res.errMsg)
-                                            app.globalData.userInfo = res.userInfo;
-                                            console.log(res.userInfo);
-                                            console.log("getUserInfo rawData: " + res.rawData);
-                                            that.updateUserInfo();
-                                            wx.hideLoading()
-                                        }
-                                    });
-                                } else {
-                                    console.log("getUserInfo 未授权");
-                                    wx.hideLoading();
-                                    that.showModal();
-                                }
-                            }
-                        });
+                        that.checkoutUserInfoCompele();
+                        // app.globalData.sessionKey = json['sessionKey'];
+                        // wx.getSetting({
+                        //     success: function(res) {
+                        //         if (res.authSetting['scope.userInfo']) {
+                        //             // 已经授权，可以直接调用 getUserInfo 获取头像昵称
+                        //             console.log("已经授权，可以直接调用 getUserInfo 获取头像昵称");
+                        //             wx.getUserInfo({
+                        //                 success: function(res) {
+                        //                     console.log("getUserInfo errMsg: " + res.errMsg)
+                        //                     app.globalData.userInfo = res.userInfo;
+                        //                     console.log(res.userInfo);
+                        //                     console.log("getUserInfo rawData: " + res.rawData);
+                        //                     that.updateUserInfo();
+                        //                     wx.hideLoading()
+                        //                 }
+                        //             });
+                        //         } else {
+                        //             console.log("getUserInfo 未授权");
+                        //             wx.hideLoading();
+                        //             that.showModal();
+                        //         }
+                        //     }
+                        // });
                     },
                     fail: function(res) {
                         //{"session_key":"cdAwOIaaXNBty+nGlOyrPQ==","openid":"oxiEr5Ox2L7goNZTKGY5IRGIl0sI"}
@@ -167,8 +171,16 @@ Page({
         console.log("package onShow");
         // this.showDialog();
         console.log(app.globalData.userInfo);
+        if (undefined == app.globalData.userInfo && this.data.checkStatus) {
+            wx.showToast({
+                title: '请先注册登录',
+                icon: 'error',
+                duration: 2000,
+            })
+            return;
+        }
         this.updateOrderList();
-        this.updateStoreNumber();
+        this.updateStoreNumber(undefined);
     },
 
     /**
@@ -190,8 +202,21 @@ Page({
      */
     onPullDownRefresh: function() {
         console.log("下拉");
-
-        // wx.stopPullDownRefresh();
+        if (undefined == app.globalData.userInfo) {
+            wx.showToast({
+                title: '请先注册登录',
+                icon: 'error',
+                duration: 2000,
+            })
+            wx.stopPullDownRefresh();
+            return;
+        }
+        var that = this;
+        this.orderListCallback = res => {
+            wx.stopPullDownRefresh();
+        }
+        this.updateOrderList();
+        this.updateStoreNumber(this.orderListCallback);
     },
     /**
      * 页面上拉触底事件的处理函数
@@ -207,7 +232,7 @@ Page({
      */
     onShareAppMessage: function() {
         return {
-            title: '哈哈',
+            title: '织里童装拼包行业开创者',
             path: '/page/user?id=123'
         }
     },
@@ -226,6 +251,7 @@ Page({
         console.log("closePackage" + e.target.id);
     },
     login: function() {
+        console.log("start wx.login");
         var that = this;
         wx.login({
             // wx.login({
@@ -236,13 +262,15 @@ Page({
                     wx.request({
                         url: util.sessionurl(),
                         data: {
-                            code: res.code
+                            code: res.code,
+                            apptype: 1
                         },
                         success: function(res) {
                             console.log("从自己服务器获取openid: " + res.data.data);
                             var json = JSON.parse(res.data.data.data);
                             console.log(json['openIDKey']);
                             app.globalData.openid = json['openIDKey'];
+                            // app.globalData.sessionKey = json['sessionKey'];
                             if (200 == res.data.statusCode) {
                                 wx.setStorage({
                                     key: "localOpenID",
@@ -256,31 +284,32 @@ Page({
                                         console.log("setStorage failed");
                                     }
                                 });
-                                wx.getSetting({
-                                    success: function(res) {
-                                        if (res.authSetting['scope.userInfo']) {
-                                            // 已经授权，可以直接调用 getUserInfo 获取头像昵称
-                                            console.log("已经授权，可以直接调用 getUserInfo 获取头像昵称");
-                                            wx.getUserInfo({
-                                                success: function(res) {
-                                                    console.log("getUserInfo errMsg: " + res.errMsg)
-                                                    app.globalData.userInfo = res.userInfo;
-                                                    console.log(res.userInfo);
-                                                    console.log("getUserInfo rawData: " + res.rawData);
-                                                    that.updateUserInfo();
-                                                    wx.hideLoading();
-                                                }
-                                            });
-                                        } else {
-                                            console.log("getUserInfo 未授权");
-                                            wx.hideLoading();
-                                            that.showModal();
-                                        }
-                                    },
-                                    fail: function(res) {
-                                        wx.hideLoading();
-                                    }
-                                });
+                                that.checkoutUserInfoCompele();
+                                // wx.getSetting({
+                                //     success: function(res) {
+                                //         if (res.authSetting['scope.userInfo']) {
+                                //             // 已经授权，可以直接调用 getUserInfo 获取头像昵称
+                                //             console.log("已经授权，可以直接调用 getUserInfo 获取头像昵称");
+                                //             wx.getUserInfo({
+                                //                 success: function(res) {
+                                //                     console.log("getUserInfo errMsg: " + res.errMsg)
+                                //                     app.globalData.userInfo = res.userInfo;
+                                //                     console.log(res.userInfo);
+                                //                     console.log("getUserInfo rawData: " + res.rawData);
+                                //                     that.updateUserInfo();
+                                //                     wx.hideLoading();
+                                //                 }
+                                //             });
+                                //         } else {
+                                //             console.log("getUserInfo 未授权");
+                                //             wx.hideLoading();
+                                //             that.showModal();
+                                //         }
+                                //     },
+                                //     fail: function(res) {
+                                //         wx.hideLoading();
+                                //     }
+                                // });
                             } else {
                                 console.log("获取openid失败");
                                 wx.hideLoading()
@@ -304,6 +333,62 @@ Page({
                 wx.hideLoading()
             }
         })
+    },
+    checkoutUserInfoCompele: function () {
+        var that = this;
+        console.log("api :" + util.userfind());
+        //查询是否存在
+        wx.request({
+            url: util.userfind(),
+            data: {
+                tokenKey: app.globalData.openid
+            },
+            success: function(res) {
+                console.log(res.data);
+                if (200 == res.data.statusCode) {
+                    if (40003 == res.data.data.retCode) {
+                        //不存在，则创建新用户
+                        
+                    } else if (30000 == res.data.data.retCode) {
+                        //key超时
+                        that.login();
+                    } else {
+                        //存在用户
+                        var test = (res.data.data.data[0]);
+                        console.log("updateUser");
+                        if ('微信用户' == test.nickname ||
+                        undefined == test.wxnickname || '' == test.wxnickname || '微信用户' == test.wxnickname) {
+                            app.globalData.userInfo = undefined;
+                            wx.showToast({
+                              title: '请先注册登录',
+                              icon: 'error',
+                              duration: 2000,
+                            })
+                        }
+                        else {
+                            app.globalData.userInfo = res.data.data.data[0];
+                            that.updateOrderList();
+                            that.updateStoreNumber(undefined);
+                        }
+                    }
+                }
+                if (200 == res.data.statusCode) {
+
+                }
+                console.log("/user/find: " + res.data.statusCode);
+                that.data.checkStatus = true;
+                wx.hideLoading();
+            },
+            fail: function(res) {
+                console.log(res + res.errMsg);
+                console.log("/user/find: api failed");
+                wx.hideLoading();
+                wx.showToast({
+                  title: '登录失败',
+                })
+                that.data.checkStatus = true;
+            }
+        });
     },
     updateUserInfo: function() {
 
@@ -346,7 +431,7 @@ Page({
                                                 if (40003 != res.data.data.code) {
                                                     app.globalData.userInfo = res.data.data.data[0];
                                                     that.updateOrderList();
-                                                    that.updateStoreNumber();
+                                                    that.updateStoreNumber(undefined);
                                                 }
                                             }
                                             console.log("/user/new: " + res.data.statusCode);
@@ -389,7 +474,7 @@ Page({
                                                     if (40003 != res.data.data.retCode) {
                                                         app.globalData.userInfo = res.data.data.data[0];
                                                         that.updateOrderList();
-                                                        that.updateStoreNumber();
+                                                        that.updateStoreNumber(undefined);
                                                     }
                                                 }
                                                 console.log("/user/new: " + res.data.statusCode);
@@ -403,7 +488,7 @@ Page({
                             // debugger
                             app.globalData.userInfo = res.data.data.data[0];
                             that.updateOrderList();
-                            that.updateStoreNumber();
+                            that.updateStoreNumber(undefined);
                         }
                     }
                 }
@@ -455,7 +540,7 @@ Page({
             }
         });
     },
-    updateStoreNumber: function() {
+    updateStoreNumber: function(callback) {
         var that = this;
         wx.request({
             url: util.findStore(),
@@ -466,14 +551,27 @@ Page({
                 console.log(res.data);
                 if (200 == res.data.statusCode) {
                     if (0 == res.data.data.retCode) {
-                        var storeTable = res.data.data.data;
-                        console.log("storeTable: " + storeTable);
-
-                        var storeNumber = storeTable.storenumber;
-                        that.setData({
-                            storeNumber: storeNumber
-                        });
+                        var storeTableList = res.data.data.data;
+                        console.log("storeTableList: " + storeTableList);
+                        if (storeTableList) {
+                            var storeNumber = "";
+                            storeTableList.forEach(storeTable => {
+                                storeNumber = storeNumber + " " + storeTable.storenumber;
+                            });
+                            // var storeNumber = storeTable.storenumber;
+                            that.setData({
+                                storeNumber: storeNumber
+                            });
+                        }
                     }
+                }
+                if (callback) {
+                    callback();
+                }
+            },
+            fail: function(res) {
+                if (callback) {
+                    callback();
                 }
             }
         });
@@ -497,6 +595,7 @@ Page({
                         console.log("orderList: " + totalOrder);
                         var unarrived = [];
                         var arrived = [];
+                        var confirmed = [];
                         for (var i = 0; i < totalOrder.length; i++) {
                             console.log(totalOrder[i]);
                             totalOrder[i]['checked'] = '';
@@ -505,11 +604,18 @@ Page({
                             if (0 == totalOrder[i].orderstatus) {
                                 totalOrder[i]['orderstatustext'] = "等待厂家配货";
                                 var orderUnarrived = totalOrder[i];
-                                unarrived.splice(0, 0, orderUnarrived);
+                                // unarrived.splice(0, 0, orderUnarrived);
+                                unarrived.push(orderUnarrived);
                             } else if (1 == totalOrder[i].orderstatus) {
                                 totalOrder[i]['orderstatustext'] = "配货中心已入库";
                                 var orderArrived = totalOrder[i];
-                                arrived.splice(0, 0, orderArrived);
+                                // arrived.splice(0, 0, orderArrived);
+                                arrived.push(orderArrived);
+                            }else if (2 == totalOrder[i].orderstatus) {
+                                totalOrder[i]['orderstatustext'] = "配货中心已点货";
+                                var orderConfirmed = totalOrder[i];
+                                // confirmed.splice(0, 0, orderConfirmed);
+                                confirmed.push(orderConfirmed);
                             }
                         }
                         that.data.orderList = totalOrder;
@@ -531,11 +637,17 @@ Page({
                             case (2):
                                 {
                                     that.setData({
-                                        orderList: that.data.orderList
+                                        orderList: confirmed
                                     });
                                 }
                                 break;
                             default:
+                                {
+                                    that.setData({
+                                        orderList: that.data.orderList
+                                    });
+                                }
+                                break;
                                 break;
                         }
                     }

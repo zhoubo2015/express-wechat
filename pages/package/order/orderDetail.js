@@ -65,7 +65,7 @@ Page({
      * 生命周期函数--监听页面显示
      */
     onShow: function() {
-        var height = this.realWindowHeight - 53;
+        var height = this.realWindowHeight;// - 53;
         this.setData({
             scrollHeight: height
         });
@@ -99,6 +99,7 @@ Page({
                         phoneNumber: that.data.orderInfo.factoryInfo.phonenumber,
                         companyAddress: that.data.orderInfo.factoryInfo.contactaddress,
                         orderCount: that.data.orderInfo.ordercount,
+                        confirmordercount: null!=that.data.orderInfo.confirmordercount?that.data.orderInfo.confirmordercount:'0',
                         orderWeight: that.data.orderInfo.orderweight,
                         orderMoney: that.data.orderInfo.ordermoney,
                         orderDeadline: that.data.orderInfo.deadlinedate,

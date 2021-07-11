@@ -3,13 +3,15 @@ var app = getApp();
 var util = require('../../../common/util.js');
 Page({
     data: {
-        statusType: ["未入库", "已改期", "已入库", "总订单"],
-        currentType: 0,
+        statusType: ["未入库", "已入仓", "已入库", "总订单"],
+        currentType: 3,
         tabClass: ["", "", "", ""],
         packageID: "",
         storeID: "",
+        storeNumber: "",
         packageNumber: "",
-        orderList: undefined
+        orderList: undefined,
+        totalOrder: undefined,
     },
     statusTap: function(e) {
         var curType = e.currentTarget.dataset.index;
@@ -119,9 +121,11 @@ Page({
         console.log("onLoad: " + options.packageNumber);
         this.data.packageID = options.packageID;
         this.data.storeID = options.storeID;
+        this.data.storeNumber = options.storeNumber;
         this.data.packageNumber = options.packageNumber;
+        this.data.totalOrder = JSON.parse(options.orderList);;
         this.setData({
-            storeID: this.data.storeID,
+            storeNumber: this.data.storeNumber,
             packageNumber: this.data.packageNumber
         });
     },
@@ -138,6 +142,70 @@ Page({
         };
         postData.status = that.data.currentType;
 
+        // that.data.orderList = res.data.data.data;
+        var unarrived = [];
+        // var modify = [];
+        var arrived = [];
+        var confirmed = [];
+        // var totalOrder = that.data.orderList;
+        that.data.orderList = that.data.totalOrder;
+        for (var i = 0; i < that.data.totalOrder.length; i++) {
+            console.log(that.data.totalOrder[i]);
+            if (0 == that.data.totalOrder[i].orderstatus) {
+                var orderUnarrived = that.data.totalOrder[i];
+                orderUnarrived['orderstatustext'] = "等待厂家配货";
+                unarrived.splice(0, 0, orderUnarrived);
+            } 
+            // else if (1 == that.data.totalOrder[i].orderstatus) {
+            //     var orderModify = that.data.totalOrder[i];
+            //     orderModify['orderstatustext'] = "该订单已改期";
+            //     modify.splice(0, 0, orderModify);
+            // } 
+            else if (1 == that.data.totalOrder[i].orderstatus) {
+                var orderArrived = that.data.totalOrder[i];
+                orderArrived['orderstatustext'] = "配货中心已入仓";
+                arrived.splice(0, 0, orderArrived);
+            } 
+            else if (2 == that.data.totalOrder[i].orderstatus) {
+                var orderConfirmed = that.data.totalOrder[i];
+                orderConfirmed['orderstatustext'] = "配货中心已入库";
+                confirmed.splice(0, 0, orderConfirmed);
+            }
+        }
+        switch (that.data.currentType) {
+            case (0):
+                {
+                    that.setData({
+                        orderList: unarrived
+                    });
+                }
+                break;
+            case (1):
+                {
+                    that.setData({
+                        orderList: arrived
+                    });
+                }
+                break;
+            case (2):
+                {
+                    that.setData({
+                        orderList: confirmed
+                    });
+                }
+                break;
+            case (3):
+                {
+                    that.setData({
+                        orderList: that.data.orderList
+                    });
+                }
+                break;
+            default:
+                break;
+        }
+
+        return;
         wx.request({
             url: util.orderfind(),
             data: {
@@ -236,6 +304,11 @@ Page({
             wx.hideNavigationBarLoading() //完成停止加载
             wx.stopPullDownRefresh() //停止下拉刷新
         }, 1500);
+        // var that = this;
+        // this.orderListCallback = res => {
+        //     wx.stopPullDownRefresh();
+        // }
+        // this.updatePackageList(this.orderListCallback);
     },
 
     /** 

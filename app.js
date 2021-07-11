@@ -5,7 +5,8 @@ App({
   globalData: {
     hasLogin: false,
     openid: null,
-    userInfo: undefined
+    userInfo: undefined,
+    sessionKey: undefined,
   },
   onLaunch: function (options) {
     // Do something initial when launch.
@@ -71,7 +72,8 @@ App({
           wx.request({
             url: util.sessionurl(),
             data: {
-              code: res.code
+              code: res.code,
+              apptype: 1
             },
             success: function (res) {
               console.log("从自己服务器获取openid: " + res.data.data);
@@ -116,7 +118,8 @@ App({
             wx.request({
               url: util.sessionurl(),
               data: {
-                code: res.code
+                code: res.code,
+                apptype: 1
               },
               success(res) {
                 console.log("从自己服务器获取openid: " + res.data.data);
@@ -202,3 +205,11 @@ App({
     )
   }
 })
+
+
+// {
+//   "pagePath": "pages/new/new",
+//   "text": "创建包裹",
+//   "iconPath": "images/package/package.png",
+//   "selectedIconPath": "images/package/package_selected.png"
+// },

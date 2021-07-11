@@ -1,15 +1,18 @@
 <!--pages/package/package/packageDetail.wxml-->
 <view class="container">
-    <view style='height:200rpx;display:flex;;flex-direction:column;align-items:center;'>
-        <view style='display:flex;justify-content: center;'>{{storeID}}</view>
+    <view style='height:100rpx;display:flex;;flex-direction:column;align-items:center;'>
+        <view style='display:flex;justify-content: center;'>{{storeNumber}}</view>
         <view style='display:flex;justify-content: center;'>{{packageNumber}}</view>
     </view>
-    <view class="status-box">
+    <view style='height:50rpx;display:flex;;flex-direction:column;align-items:center;'>
+        <view style='display:flex;justify-content: center;'>包裹清单</view>
+    </view>
+    <!-- <view class="status-box">
         <view bindtap="statusTap" class="status-label {{index == currentType ? 'active' : ''}}" wx:for-items="{{statusType}}" wx:key="{{index}}" data-index="{{index}}">
             {{item}}
             <view class="{{tabClass[index]}}"></view>
         </view>
-    </view>
+    </view> -->
     <view class="no-order" hidden="{{orderList ? true : false}}">
         <image src="/images/no-order.png" class="no-order-img"></image>
         <view class="text">暂无订单</view>
@@ -23,8 +26,9 @@
                 <view>
                     <text class='text-custom'>{{item.factoryInfo.factoryname}}({{item.factoryInfo.contactaddress}})</text>
                     <text class='text-custom'>{{item.ordernumber}}</text>
-                    <text class='text-custom'>金额:{{item.ordermoney}}</text>
+                    <!-- <text class='text-custom'>金额:{{item.ordermoney}}</text> -->
                     <text class='text-custom'>数量:{{item.ordercount}}</text>
+                    <text class='text-custom'>核点数量:{{null!=item.confirmordercount?item.confirmordercount:'0'}}</text>
                 </view>
                 <view>
                     <text class='text-custom-right'>{{item.createdate}}</text>
@@ -32,8 +36,8 @@
             </view>
         </view>
     </view>
-    <view class='tab-bottom'>
+    <!-- <view class='tab-bottom'>
         <button id='' class="weui-btn" type="primary" plain="true" style='width:40%;' bindtap="addNewOrder">添加订单</button>
         <button id='' class="weui-btn" type="primary" plain="true" style='width:40%;' bindtap="changeOrder">改期/调拨</button>
-    </view>
+    </view> -->
 </view>

@@ -1,6 +1,7 @@
-var domain = "https://www.langrun.club:8091/express-0.0.1";
+// var domain = "https://www.langrun.club:8091/express-0.0.1";
+var domain = "https://www.51baodaren.com:8091/express-0.0.1";
 // var domain = "http://111.231.85.91/express-0.0.1-SNAPSHOT";
-// var domain = "http://localhost:8086"
+// var domain = "http://192.168.3.8:8090"
 
 function sessionurl() {
     return domain + "/webChat/sessionKey";
@@ -70,6 +71,10 @@ function balePackage() {
     return domain + "/webChat/balePackage";
 }
 
+function packageList() {
+    return domain + "/webChat/packageList";
+}
+
 module.exports = {
     getRequestUrl: "http://localhost:59637", //获得接口地址
     sessionurl: sessionurl,
@@ -88,5 +93,6 @@ module.exports = {
     updateUser: updateUser,
     orderList: orderList,
     findStore: findStore,
-    balePackage: balePackage
+    balePackage: balePackage,
+    packageList: packageList
 }

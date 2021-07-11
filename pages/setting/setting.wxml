@@ -1,9 +1,17 @@
 <!--pages/setting/setting.wxml-->
-<view class="userinfo">
-  <image wx:if="{{userInfo && userInfo.avatarurl}}" class="userinfo-avatar" src="{{ userInfo.avatarurl }}" background-size="cover"></image>
-  <text class="userinfo-nickname">{{ userInfo.nickname }}</text>
+<view hidden="{{!hiddenLoginBtn}}" class="userinfo">
+  <!-- wx:if="{{userInfo && userInfo.avatarurl}}" -->
+  <image class="userinfo-avatar" src="{{userInfo.avatarurl}}" background-size="cover"></image>
+  <text class="userinfo-nickname">{{userInfo.nickname}}</text>
 </view>
-<view class="weui-cells weui-cells_after-title">
+<view class="userInfoBtn" hidden="{{!hiddenLoginBtn}}">
+  <button type="primary" bindtap="showUserInfo">个人信息</button>
+</view>
+<view class="getUserCenter" hidden="{{hiddenLoginBtn}}">
+    <button wx:if="{{canIUseGetUserProfile}}" type="primary" bindtap="getUserProfile">登录/注册</button>
+    <button wx:else type="primary" open-type="getUserInfo" bindgetuserinfo="bindGetUserInfo" catchtap='confirmEvent'>登录/注册</button>
+</view>
+<!-- <view class="weui-cells weui-cells_after-title">
     <navigator url="" bindtap='addressManager' class="weui-cell weui-cell_access" hover-class="weui-cell_active">
         <view class="weui-cell__bd">地址管理</view>
         <view class="weui-cell__ft weui-cell__ft_in-access"></view>
@@ -14,4 +22,4 @@
           <switch checked bindchange="switchChange"></switch>
         </view>
     </navigator>
-</view>
+</view> -->

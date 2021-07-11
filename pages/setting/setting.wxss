@@ -25,3 +25,16 @@ userinfo{
   margin-top: 20rpx;
   color: #FFF;
 }
+.getUserCenter{
+	margin-top: 300rpx;
+  /* display:flex;
+  align-items:center;
+	justify-content:center; */
+	/* vertical-align: middle; */
+}
+button{
+  /* display:flex;
+  align-items:center;
+	justify-content:center; */
+	vertical-align: middle;
+}

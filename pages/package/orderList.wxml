@@ -23,9 +23,9 @@
       bind:componentBindGetUserInfo='myBindGetUserInfo'>
   </dialog> -->
     <view>
-        <text class='text-center'>配货中心客户端</text>
+        <text class='text-center'>包大人客户端</text>
     </view>
-    <view class="weui-cells__title">订单列表</view>
+    <!-- <view class="weui-cells__title" style="font-size: 15px">订单列表</view> -->
     <view>
         <text class='text-center'>{{storeNumber}}</text>
     </view>
@@ -53,8 +53,9 @@
                             <view>
                                 <text class='text-custom'>{{item.factoryInfo.factoryname}}({{item.factoryInfo.contactaddress}})</text>
                                 <text class='text-custom'>{{item.ordernumber}}</text>
-                                <text class='text-custom'>金额:{{item.ordermoney}}</text>
+                                <!-- <text class='text-custom'>金额:{{item.ordermoney}}</text> -->
                                 <text class='text-custom'>数量:{{item.ordercount}}</text>
+                                <text class='text-custom'>核点数量:{{null!=item.confirmordercount?item.confirmordercount:'0'}}</text>
                             </view>
                             <view>
                                 <text class='text-custom-right'>{{item.createDataStr}}</text>
@@ -64,9 +65,9 @@
                 </label>
             </checkbox-group>
         </view>
-        <view class='tab-bottom'>
+        <!-- <view class='tab-bottom'>
             <button id='' class="weui-btn" type="primary" plain="true" style='width:40%;' bindtap="addNewOrder">{{addBtnTitle}}</button>
             <button id='' class="weui-btn" type="primary" plain="true" style='width:40%;' bindtap="baleOrder">{{baleBtnTitle}}</button>
-        </view>
+        </view> -->
     </view>
 </view>

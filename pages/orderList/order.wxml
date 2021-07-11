@@ -1,0 +1,79 @@
+<!--pages/orderList/order.wxml-->
+<view class="commodity_screen" bindtap="hideModal" wx:if="{{showModalStatus}}"></view>    
+<view animation="{{animationData}}" class="commodity_attr_box" wx:if="{{showModalStatus}}">    
+  <!--对话框标题-->    
+  <view class="dialog-title">    
+    登录提示  
+  </view>    
+  <view class="line-top"></view>      
+  <view class="dialog-content">   
+  小程序需要您的授权才能提供更好的服务哦
+  </view>  
+  <!--对话框按钮-->    
+  <view class="line-top"></view>    
+  <view class="btn-view">    
+    <button class='dialog-btn' open-type="getUserInfo" bindgetuserinfo='bindGetUserInfo' catchtap='confirmEvent'>知道了</button> 
+  </view>    
+</view>  
+<view class="whole-page">
+  <!-- <dialog id='dialog' 
+      title='登录提示' 
+      content='小程序需要您的授权才能提供更好的服务哦' 
+      confirmText='知道了'
+      bind:componentConfirmEvent='myConfirmEvent'
+      bind:componentBindGetUserInfo='myBindGetUserInfo'>
+  </dialog> -->
+  <view>
+    <text class='text-center'>配货中心客户端</text>
+  </view> 
+  <view class='package-list-end' wx:for-items="{{packageList}}" wx:key="{{index}}">  
+    <view class='package-list'>
+      <view class='package-info'>
+        <text style='font-size:17px;padding-left:5px;color:red;'>{{item.storeid}}库</text>
+        <text style='font-size:15px;'>{{item.packagenumber}}</text>
+        <text style='font-size:11px;padding-right:5px;color:lightgray;'>{{item.createdate}}</text>
+      </view>
+    </view>
+    <view class="table">
+      <view class="tr bg-g">
+        <view class="td td-first">{{item.unarrived}}</view>
+        <view class="td td-second">{{item.modify}}</view>
+        <view class="td td-three">{{item.arrived}}</view>
+        <view class="td td-four">{{item.totalOrder}}</view>
+      </view>
+      <view class="tr bg-g">
+        <view class="td">未入库</view>
+        <view class="td">已改期</view>
+        <view class="td">已入库</view>
+        <view class="td">总订单</view>
+      </view>
+      <view>
+        <label class='label-custom'>截止日期:{{item.deadTime}}</label>
+      </view>
+      <view>
+        <label class='label-custom'>包裹状态:{{item.packagestatus}}</label>
+      </view>
+    </view> 
+    <view class="weui-cells weui-cells_after-title">
+        <navigator url="/pages/package/package/packageDetail?packageNumber={{item.packagenumber}}&packageID={{item.packageid}}&storeID={{item.storeid}}" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
+            <view class="weui-cell__bd">包裹订单</view>
+            <view class="weui-cell__ft weui-cell__ft_in-access">{{item.totalOrder}}</view>
+        </navigator>
+        <navigator url="/pages/package/order/orderDetail" class="weui-cell weui-cell_access">
+            <view class="weui-cell__bd">订单动态</view>
+            <view class="weui-cell__ft weui-cell__ft_in-access" style="font-size: 0">
+                <view style="display: inline-block;vertical-align:middle; font-size: 17px;">{{item.totalTips}}条动态</view>
+                <view class="weui-badge weui-badge_dot" style="margin-left: 5px;margin-right: 5px;"></view>
+            </view>
+        </navigator>
+        <!-- <navigator url="/pages/package/order/orderDetail" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
+            <view class="weui-cell__bd">收货信息推送</view>
+            <view class="weui-cell__ft weui-cell__ft_in-access">说明文字</view>
+        </navigator> -->
+    </view> 
+    <view class='package-button'>
+      <button id='{{index}}'  bindtap="addNewList">添加订单</button>
+      <button id='{{index}}' bindtap="closePackage">封包</button>
+    </view>
+  </view>
+</view> 

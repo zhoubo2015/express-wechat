@@ -8,28 +8,31 @@
     "pages/new/new",
     "pages/new/order/newOrder",
     "pages/new/addCompany/newCompany",
-    "pages/setting/setting"
+    "pages/setting/setting",
+    "pages/orderList/order",
+    "pages/new/packageList",
+    "pages/setting/userInfo"
   ],
   "window": {
-    "backgroundTextStyle": "dark",
+    "backgroundTextStyle": "light",
     "navigationBarBackgroundColor": "#2D76EC",
-    "navigationBarTitleText": "Express",
-    "navigationBarTextStyle":"black"
+    "navigationBarTitleText": "包大人",
+    "navigationBarTextStyle": "white"
   },
   "tabBar": {
     "selectedColor": "#1296db",
     "list": [
       {
         "pagePath": "pages/package/orderList",
-        "text": "首页",
-        "iconPath": "images/new/new.png",
-        "selectedIconPath": "images/new/new_selected.png"
+        "text": "订单",
+        "iconPath": "images/new/order.png",
+        "selectedIconPath": "images/new/order_selected.png"
       },
       {
-        "pagePath": "pages/new/new",
-        "text": "创建包裹",
-        "iconPath": "images/package/package.png",
-        "selectedIconPath": "images/package/package_selected.png"
+        "pagePath": "pages/new/packageList",
+        "text": "包裹",
+        "iconPath": "images/package/package_new.png",
+        "selectedIconPath": "images/package/package_new_selected.png"
       },
       {
         "pagePath": "pages/setting/setting",
@@ -43,5 +46,6 @@
     "request": 10000,
     "downloadFile": 10000
   },
-  "debug": true
+  "debug": true,
+  "sitemapLocation": "sitemap.json"
 }

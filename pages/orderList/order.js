@@ -1,4 +1,4 @@
-// pages/package/package.js
+// pages/orderList/order.js
 var inputinfo = "";  
 var app = getApp();
 var util = require('../../common/util.js');
@@ -20,97 +20,7 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-  //https://user-images.githubusercontent.com/2777305/40645613-759aaef4-6359-11e8-8b20-eff82b0355b1.png
-    // 查看是否授权
-    console.log("package.js onLoad");
-    var that = this;
-    wx.showLoading({
-      title: '登录中...',
-    });
-    wx.checkSession({
-      success: function () {
-        //session_key 未过期，并且在本生命周期一直有效
-        console.log("session_key 未过期，并且在本生命周期一直有效");
-        app.globalData.hasLogin = true;
-        // that.globalData.openid = "oxiEr5Ox2L7goNZTKGY5IRGIl0sI";
-        // app.globalData.hasLogin = true
-        wx.getStorage({
-          key: 'localOpenID',
-          success: function (res) {
-            console.log("getStorage" + res.data);
-            var json = JSON.parse(res.data);
-            console.log(json['openIDKey']);
-            app.globalData.openid = json['openIDKey'];
-            wx.getSetting({
-              success: function (res) {
-                if (res.authSetting['scope.userInfo']) {
-                  // 已经授权，可以直接调用 getUserInfo 获取头像昵称
-                  console.log("已经授权，可以直接调用 getUserInfo 获取头像昵称");
-                  wx.getUserInfo({
-                    success: function (res) {
-                      console.log("getUserInfo errMsg: " + res.errMsg)
-                      app.globalData.userInfo = res.userInfo;
-                      console.log(res.userInfo);
-                      console.log("getUserInfo rawData: " + res.rawData);
-                      that.updateUserInfo();
-                      wx.hideLoading()
-                    }
-                  });
-                }
-                else {
-                  console.log("getUserInfo 未授权");
-                  wx.hideLoading();
-                  that.showModal();
-                }
-              }
-            });
-          },
-          fail: function (res) {
-            //{"session_key":"cdAwOIaaXNBty+nGlOyrPQ==","openid":"oxiEr5Ox2L7goNZTKGY5IRGIl0sI"}
-            console.log("本地获取openid失败");
-            that.login();
-          }
-        });
-      },
-      fail: function () {
-        // session_key 已经失效，需要重新执行登录流程
-        console.log("session_key 已经失效，需要重新执行登录流程");
-        //重新登录
-        that.login();
-      }
-    });
-
-
-    // wx.getSetting({
-    //   success: function (res) {
-    //     if (res.authSetting['scope.userInfo']) {
-    //       // 已经授权，可以直接调用 getUserInfo 获取头像昵称
-    //       console.log("已经授权，可以直接调用 getUserInfo 获取头像昵称");
-    //       wx.getUserInfo({
-    //         success: function (res) {
-    //           console.log("getUserInfo errMsg: " + res.errMsg)
-    //           app.globalData.userInfo = res.userInfo;
-    //           console.log(res.userInfo);
-    //           console.log("getUserInfo rawData: " + res.rawData);
-    //           that.updateUserInfo();
-    //         }
-    //       });
-    //     }
-    //     else {
-    //       console.log("getUserInfo 未授权");
-    //       that.showModal();
-    //     }
-    //   }
-    // });
-    // that.setData({
-    //   packageList: [{ "time": 2018, "title": "damon", "address":"hang"},
-    //     { "time": 2019, "title": "damon", "address": "hangzhou" },
-    //     { "time": 2020, "title": "damon11", "address": "hang" },
-    //     { "time": 2021, "title": "da", "address": "hangzhou" },
-    //     { "time": 2022, "title": "damon", "address": "hangzhou" },
-    //     { "time": 2023, "title": "damon", "address": "hangzhou" },
-    //     { "time": 2024, "title": "damon", "address": "hangzhou" }] 
-    // });  
+  
   },
 
   /**
@@ -183,7 +93,7 @@ Page({
    */
   onPullDownRefresh: function () {
     console.log("下拉");
-
+ 
     // wx.stopPullDownRefresh();
   },
   /**
@@ -233,14 +143,14 @@ Page({
               apptype: 1
             },
             success: function (res) {
-              console.log("从自己服务器获取openid: " + res.data.data);
+              console.log("从自己服务器获取openid: " + res.data);
               var json = JSON.parse(res.data.data.data);
-              console.log(json['openIDKey']);
-              app.globalData.openid = json['openIDKey'];
+              console.log(json['openid']);
+              app.globalData.openid = json['openid'];
               if (200 == res.data.statusCode) {
                 wx.setStorage({
                   key: "localOpenID",
-                  data: res.data.data.data,
+                  data: res.data.data,
                   success: function (res){
                     // wx.showToast({
                     //   title: 'Storage',
@@ -303,20 +213,18 @@ Page({
     })
   },
   updateUserInfo: function () {
-
-
     var that = this;
     console.log("api :" + util.userfind());
     //查询是否存在
     wx.request({
       url: util.userfind(),
       data: {
-        tokenKey: app.globalData.openid
+        openID: app.globalData.openid
       },
       success: function (res) {
         console.log(res.data);
         if (200 == res.data.statusCode) {
-          if (40003 == res.data.data.retCode) {
+          if (40003 == res.data.data.code) {
             //不存在，则创建新用户
             wx.request({
               url: util.usernew(),
@@ -353,55 +261,12 @@ Page({
               }
             });
           }
-          else if (30000 == res.data.data.retCode) {
-            //key超时
-            that.login();
-          }
           else {
             //存在用户
             var test = (res.data.data.data[0]);
-            if (0 == test.avatarurl.length) {
-              //need uodate user info
-              wx.request({
-                url: util.updateUser(),
-                data: {
-                  nickName: app.globalData.userInfo.nickName,
-                  avatarUrl: app.globalData.userInfo.avatarUrl,
-                  phoneNumber: "000",
-                  gender: app.globalData.userInfo.gender,
-                  tokenKey: app.globalData.openid
-                },
-                success: function (res) {
-                  console.log(res.data);
-                  if (200 == res.data.statusCode) {
-                    console.log("user update! " + res.data.data.retCode);
-                    //更新后，重新获取一次用户数据
-                    wx.request({
-                      url: util.userfind(),
-                      data: {
-                        tokenKey: app.globalData.openid
-                      },
-                      success: function (res) {
-                        console.log(res.data);
-                        if (200 == res.data.statusCode) {
-                          if (40003 != res.data.data.retCode) {
-                            app.globalData.userInfo = res.data.data.data[0];
-                            that.updatePackageList();
-                          }
-                        }
-                        console.log("/user/new: " + res.data.statusCode);
-                      }
-                    });
-                  }
-                  console.log("/user/new: " + res.data.statusCode);
-                }
-              });
-            }
-            else {
-              // debugger
-              app.globalData.userInfo = res.data.data.data[0];
-              that.updatePackageList();
-            }
+            // debugger
+            app.globalData.userInfo = res.data.data.data[0];
+            that.updatePackageList();
           }
         }
         if (200 == res.data.statusCode) {
@@ -414,8 +279,6 @@ Page({
         console.log("/user/find: api failed");
       }
     });
-
-    
   },
   updatePackageList: function() {
     var that = this;

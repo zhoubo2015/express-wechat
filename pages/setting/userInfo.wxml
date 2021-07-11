@@ -1,0 +1,44 @@
+<!--pages/setting/userInfo.wxml-->
+<!-- <text>pages/setting/userInfo.wxml</text> -->
+<view class='container'>
+  <!-- <block wx:for="{{language}}" wx:key="index">
+    <view class="bzhoucell">
+      <view class='text-content'>{{item}}</view> 
+      <view class='text-content-right'>内容</view> 
+    </view>
+  </block> -->
+  <block>
+    <view class="bzhoucell">
+      <view class='text-content'>用户名:</view> 
+      <view class='text-content-right'>{{userData.usernumber}}</view> 
+    </view>
+    <view class="bzhoucell">
+      <view class='text-content'>城市:</view> 
+      <view class='text-content-right'>{{userData.usercity}}</view> 
+    </view>
+    <view class="bzhoucell">
+      <view class='text-content'>姓名:</view> 
+      <view class='text-content-right'>{{userData.nickname}}</view> 
+    </view>
+    <view class="bzhoucell">
+      <view class='text-content'>昵称(微信):</view> 
+      <view class='text-content-right'>{{userData.wxnickname}}</view> 
+    </view>
+    <view class="bzhoucell">
+      <view class='text-content'>联系方式:</view> 
+      <view class='text-content-right'>{{userData.phonenumber}}</view> 
+    </view>
+    <view class="bzhoucell">
+      <view class='text-content'>收件人:</view> 
+      <view class='text-content-right'>{{userData.recipientname}}</view> 
+    </view>
+    <view class="bzhoucell">
+      <view class='text-content'>收件人号码:</view> 
+      <view class='text-content-right'>{{userData.rphonenumber}}</view> 
+    </view>
+    <view class="bzhoucell">
+      <view class='text-content'>收件人地址:</view> 
+      <view class='text-content-right'>{{userData.recipientaddress}}</view> 
+    </view>
+  </block>
+</view>
